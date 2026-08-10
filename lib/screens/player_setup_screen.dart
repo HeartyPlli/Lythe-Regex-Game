@@ -1,5 +1,8 @@
-part of '../main.dart';
+﻿part of '../main.dart';
 
+//=========================================================================
+// Ui player setup is here for name and avatar choose.
+//=========================================================================
 class PlayerSetupScreen extends StatefulWidget {
   const PlayerSetupScreen({
     required this.onBack,
@@ -14,6 +17,9 @@ class PlayerSetupScreen extends StatefulWidget {
   State<PlayerSetupScreen> createState() => _PlayerSetupScreenState();
 }
 
+//=========================================================================
+// This class is about _PlayerSetupScreenState thing.
+//=========================================================================
 class _PlayerSetupScreenState extends State<PlayerSetupScreen> {
   final TextEditingController _usernameController = TextEditingController();
   String _selectedAvatar = _characterChoices.first;
@@ -139,6 +145,9 @@ class _PlayerSetupScreenState extends State<PlayerSetupScreen> {
   }
 }
 
+//=========================================================================
+// This class is about CharacterChoice thing.
+//=========================================================================
 class CharacterChoice extends StatelessWidget {
   const CharacterChoice({
     required this.avatar,

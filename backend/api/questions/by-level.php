@@ -5,15 +5,24 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../config/response.php';
 require_once __DIR__ . '/../../config/database.php';
 
+//=========================================================================
+// Api questions by level is here for one level questions.
+//=========================================================================
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     send_json(false, 'Method not allowed.', null, 405);
 }
 
+//=========================================================================
+// This block get level id from url.
+//=========================================================================
 $levelId = require_int($_GET, 'level_id');
 
 try {
     $pdo = Database::connect();
 
+    //=========================================================================
+    // This query check if level exist.
+    //=========================================================================
     $levelStmt = $pdo->prepare(
         'SELECT id, level_name, difficulty, time_limit
          FROM levels
@@ -26,6 +35,9 @@ try {
         send_json(false, 'Level not found.', null, 404);
     }
 
+    //=========================================================================
+    // This query get random questions for that level.
+    //=========================================================================
     $questionStmt = $pdo->prepare(
         'SELECT id, level_id, question, answer, points
          FROM questions

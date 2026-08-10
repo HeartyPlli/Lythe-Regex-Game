@@ -1,5 +1,8 @@
-part of '../main.dart';
+﻿part of '../main.dart';
 
+//=========================================================================
+// Ui colors is here for all app color theme.
+//=========================================================================
 class AppColors {
   static const pink = Color(0xffec6680);
   static const palePink = Color(0xffffccd5);

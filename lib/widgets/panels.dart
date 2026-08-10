@@ -1,5 +1,8 @@
 part of '../main.dart';
 
+//=========================================================================
+// Ui panels is here for reusable cute panel and header ribbon.
+//=========================================================================
 enum PanelDecoration { blossom, leaf, mushroom, character, meadow, night }
 
 class CutePanel extends StatelessWidget {
@@ -18,13 +21,13 @@ class CutePanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      constraints: const BoxConstraints(maxWidth: 680),
+      constraints: const BoxConstraints(maxWidth: 760),
       decoration: BoxDecoration(
         color: dark ? AppColors.plum.withValues(alpha: 0.96) : AppColors.panel,
         borderRadius: BorderRadius.circular(26),
         border: Border.all(
           color: dark ? AppColors.brown : AppColors.peachStroke,
-          width: 3,
+          width: 4,
         ),
         boxShadow: [
           BoxShadow(
@@ -128,6 +131,9 @@ class CutePanel extends StatelessWidget {
   }
 }
 
+//=========================================================================
+// This class is about _PanelDecorationImage thing.
+//=========================================================================
 class _PanelDecorationImage extends StatelessWidget {
   const _PanelDecorationImage({
     required this.asset,
@@ -159,6 +165,9 @@ class _PanelDecorationImage extends StatelessWidget {
   }
 }
 
+//=========================================================================
+// This class is about HeaderRibbon thing.
+//=========================================================================
 class HeaderRibbon extends StatelessWidget {
   const HeaderRibbon({required this.title, required this.onBack, super.key});
 

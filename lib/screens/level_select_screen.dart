@@ -1,5 +1,8 @@
-part of '../main.dart';
+﻿part of '../main.dart';
 
+//=========================================================================
+// Ui level select is here for start game from level page.
+//=========================================================================
 class LevelSelect extends StatelessWidget {
   const LevelSelect({required this.onBack, required this.onStart, super.key});
 

@@ -1,5 +1,8 @@
-part of '../main.dart';
+﻿part of '../main.dart';
 
+//=========================================================================
+// Ui background animation is here for moving cute decoration.
+//=========================================================================
 class AnimatedGameBackground extends StatefulWidget {
   const AnimatedGameBackground({super.key});
 
@@ -7,6 +10,9 @@ class AnimatedGameBackground extends StatefulWidget {
   State<AnimatedGameBackground> createState() => _AnimatedGameBackgroundState();
 }
 
+//=========================================================================
+// This class is about _AnimatedGameBackgroundState thing.
+//=========================================================================
 class _AnimatedGameBackgroundState extends State<AnimatedGameBackground>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(

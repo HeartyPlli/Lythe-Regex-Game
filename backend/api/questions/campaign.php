@@ -5,10 +5,16 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../config/response.php';
 require_once __DIR__ . '/../../config/database.php';
 
+//=========================================================================
+// Api campaign questions is here for full game question set.
+//=========================================================================
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     send_json(false, 'Method not allowed.', null, 405);
 }
 
+//=========================================================================
+// This block set how many question per difficulty.
+//=========================================================================
 $limits = [
     'easy' => 6,
     'medium' => 5,
@@ -20,6 +26,9 @@ try {
     $pdo = Database::connect();
     $questions = [];
 
+    //=========================================================================
+    // This query get random questions by difficulty.
+    //=========================================================================
     $stmt = $pdo->prepare(
         'SELECT
             q.id,
@@ -35,6 +44,9 @@ try {
          LIMIT :limit'
     );
 
+    //=========================================================================
+    // This loop build the full campaign question list.
+    //=========================================================================
     foreach ($limits as $difficulty => $limit) {
         $stmt->bindValue(':difficulty', $difficulty, PDO::PARAM_STR);
         $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);

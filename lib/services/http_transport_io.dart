@@ -3,6 +3,12 @@ import 'dart:io';
 
 import 'http_transport.dart';
 
+//=========================================================================
+// Service transport io is here for phone desktop api request.
+//=========================================================================
+//=========================================================================
+// This function send GET request on phone or desktop.
+//=========================================================================
 Future<HttpResponseData> httpGet(Uri uri) async {
   final client = HttpClient();
   try {
@@ -18,6 +24,9 @@ Future<HttpResponseData> httpGet(Uri uri) async {
   }
 }
 
+//=========================================================================
+// This function send POST json request on phone or desktop.
+//=========================================================================
 Future<HttpResponseData> httpPostJson(
   Uri uri,
   Map<String, Object?> body,

@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """Extract individual decoration sprites from black/transparent sprite sheets."""
 
+############################################################################
+# Script is here for cut decoration images into small png.
+############################################################################
+
 from __future__ import annotations
 
 import argparse
@@ -40,6 +44,9 @@ CATEGORY_ALIASES = {
 }
 
 
+############################################################################
+# This function read command option from terminal.
+############################################################################
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
@@ -99,10 +106,16 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+############################################################################
+# This function make file name simple.
+############################################################################
 def normalized_stem(path: Path) -> str:
     return re.sub(r"[^a-z0-9]+", "_", path.stem.lower()).strip("_")
 
 
+############################################################################
+# This function choose decoration group name.
+############################################################################
 def category_for(path: Path) -> str:
     stem = normalized_stem(path)
     if stem in CATEGORY_ALIASES:
@@ -112,6 +125,9 @@ def category_for(path: Path) -> str:
     return stem or "decoration"
 
 
+############################################################################
+# This function get image edge pixels.
+############################################################################
 def border_pixels(rgb: np.ndarray, alpha: np.ndarray, width: int = 8) -> tuple[np.ndarray, np.ndarray]:
     top = rgb[:width, :, :].reshape(-1, 3)
     bottom = rgb[-width:, :, :].reshape(-1, 3)
@@ -127,6 +143,9 @@ def border_pixels(rgb: np.ndarray, alpha: np.ndarray, width: int = 8) -> tuple[n
     return rgb_border, alpha_border
 
 
+############################################################################
+# This function find which pixels is sprite.
+############################################################################
 def foreground_mask(
     image: Image.Image,
     alpha_threshold: int,
@@ -154,6 +173,9 @@ def foreground_mask(
     return ~background_connected, rgba
 
 
+############################################################################
+# This function mark background from image edge.
+############################################################################
 def flood_fill_background(background_like: np.ndarray) -> np.ndarray:
     height, width = background_like.shape
     seen = np.zeros_like(background_like, dtype=bool)
@@ -179,6 +201,9 @@ def flood_fill_background(background_like: np.ndarray) -> np.ndarray:
     return seen
 
 
+############################################################################
+# This function make mask bigger to connect pieces.
+############################################################################
 def dilate_mask(mask: np.ndarray, radius: int) -> np.ndarray:
     if radius <= 0:
         return mask
@@ -187,6 +212,9 @@ def dilate_mask(mask: np.ndarray, radius: int) -> np.ndarray:
     return np.asarray(image.filter(ImageFilter.MaxFilter(size=size))) > 0
 
 
+############################################################################
+# This function find each separate sprite part.
+############################################################################
 def connected_components(mask: np.ndarray) -> tuple[np.ndarray, list[tuple[int, int, int, int, int, int]]]:
     height, width = mask.shape
     seen = np.zeros_like(mask, dtype=bool)
@@ -229,6 +257,9 @@ def connected_components(mask: np.ndarray) -> tuple[np.ndarray, list[tuple[int, 
     return labels, components
 
 
+############################################################################
+# This function crop one sprite and make outside transparent.
+############################################################################
 def crop_component(
     rgba: np.ndarray,
     original_mask: np.ndarray,
@@ -256,6 +287,9 @@ def crop_component(
     return Image.fromarray(cropped, mode="RGBA")
 
 
+############################################################################
+# This function extract all sprite in one sheet.
+############################################################################
 def extract_sheet(
     source: Path,
     output_dir: Path,
@@ -292,6 +326,9 @@ def extract_sheet(
     return written
 
 
+############################################################################
+# Main script run is here.
+############################################################################
 def main() -> None:
     args = parse_args()
     output_dir = args.output_dir

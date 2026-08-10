@@ -1,5 +1,8 @@
-part of '../main.dart';
+﻿part of '../main.dart';
 
+//=========================================================================
+// Ui popups is here for correct wrong timeout logout and boss message.
+//=========================================================================
 class _CorrectPopup extends StatelessWidget {
   const _CorrectPopup({required this.question, required this.onNext});
 
@@ -37,7 +40,7 @@ class _CorrectPopup extends StatelessWidget {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      'Great job! That is a match!',
+                      'Congratulations! That is a match!',
                       style: TextStyle(
                         color: AppColors.brown,
                         fontWeight: FontWeight.w700,
@@ -63,6 +66,9 @@ class _CorrectPopup extends StatelessWidget {
   }
 }
 
+//=========================================================================
+// This class is about _FailurePopup thing.
+//=========================================================================
 class _FailurePopup extends StatelessWidget {
   const _FailurePopup({required this.question, required this.onSkip});
 
@@ -118,6 +124,69 @@ class _FailurePopup extends StatelessWidget {
   }
 }
 
+//=========================================================================
+// This class is about _WrongPopup thing.
+//=========================================================================
+class _WrongPopup extends StatelessWidget {
+  const _WrongPopup({required this.question, required this.onNext});
+
+  final RegexQuestion question;
+  final VoidCallback onNext;
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupScrim(
+      child: AnimatedAppear(
+        child: CutePanel(
+          decoration: PanelDecoration.character,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(22, 20, 22, 22),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Shake(
+                  child: Image.asset(
+                    'assets/image/Mad.png',
+                    height: 132,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                Text(
+                  'WRONG ANSWER!',
+                  style: TextStyle(
+                    color: AppColors.pink,
+                    fontSize: 34,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 0,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                HintBox(text: 'Correct answer example: ${question.example}'),
+                const SizedBox(height: 16),
+                Wrap(
+                  spacing: 12,
+                  runSpacing: 12,
+                  alignment: WrapAlignment.center,
+                  children: [
+                    CuteGameButton(
+                      label: 'NEXT QUESTION',
+                      icon: Icons.skip_next,
+                      onPressed: onNext,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+//=========================================================================
+// This class is about _ExtremeIntro thing.
+//=========================================================================
 class _ExtremeIntro extends StatelessWidget {
   const _ExtremeIntro();
 
@@ -166,6 +235,9 @@ class _ExtremeIntro extends StatelessWidget {
   }
 }
 
+//=========================================================================
+// This class is about _LogoutDialog thing.
+//=========================================================================
 class _LogoutDialog extends StatelessWidget {
   const _LogoutDialog({required this.onCancel, required this.onConfirm});
 

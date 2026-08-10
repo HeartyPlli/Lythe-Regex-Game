@@ -1,5 +1,8 @@
 part of '../main.dart';
 
+//=========================================================================
+// Ui game component is here for cards bars badges and score tiles.
+//=========================================================================
 class DifficultyRow extends StatelessWidget {
   const DifficultyRow({
     required this.difficulty,
@@ -65,6 +68,9 @@ class DifficultyRow extends StatelessWidget {
   }
 }
 
+//=========================================================================
+// This class is about GameTopBar thing.
+//=========================================================================
 class GameTopBar extends StatelessWidget {
   const GameTopBar({
     required this.difficulty,
@@ -153,6 +159,9 @@ class GameTopBar extends StatelessWidget {
   }
 }
 
+//=========================================================================
+// This class is about TimerPill thing.
+//=========================================================================
 class TimerPill extends StatelessWidget {
   const TimerPill({required this.seconds, super.key});
 
@@ -186,6 +195,9 @@ class TimerPill extends StatelessWidget {
   }
 }
 
+//=========================================================================
+// This class is about BrownBadge thing.
+//=========================================================================
 class BrownBadge extends StatelessWidget {
   const BrownBadge({required this.text, super.key});
 
@@ -207,6 +219,9 @@ class BrownBadge extends StatelessWidget {
   }
 }
 
+//=========================================================================
+// This class is about PinkLabel thing.
+//=========================================================================
 class PinkLabel extends StatelessWidget {
   const PinkLabel({required this.text, super.key});
 
@@ -228,6 +243,9 @@ class PinkLabel extends StatelessWidget {
   }
 }
 
+//=========================================================================
+// This class is about HintBox thing.
+//=========================================================================
 class HintBox extends StatelessWidget {
   const HintBox({required this.text, super.key});
 
@@ -263,6 +281,67 @@ class HintBox extends StatelessWidget {
   }
 }
 
+//=========================================================================
+// This class is about locked hint box thing.
+//=========================================================================
+class LockedHintBox extends StatelessWidget {
+  const LockedHintBox({
+    required this.text,
+    required this.unlocked,
+    required this.canUnlock,
+    required this.onUnlock,
+    super.key,
+  });
+
+  final String text;
+  final bool unlocked;
+  final bool canUnlock;
+  final VoidCallback onUnlock;
+
+  @override
+  Widget build(BuildContext context) {
+    final shownText = unlocked
+        ? text
+        : canUnlock
+        ? 'Hint is locked. Tap to unlock for 5 score.'
+        : 'Hint is locked. Need 5 score to unlock.';
+    return GestureDetector(
+      onTap: unlocked || !canUnlock ? null : onUnlock,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: unlocked ? AppColors.cream : AppColors.palePink,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.peachStroke, width: 2),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              unlocked ? Icons.lightbulb : Icons.lock,
+              color: unlocked ? AppColors.gold : AppColors.pink,
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                shownText,
+                style: TextStyle(
+                  color: AppColors.brown,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+//=========================================================================
+// This class is about ScoreTile thing.
+//=========================================================================
 class ScoreTile extends StatelessWidget {
   const ScoreTile({
     required this.label,
@@ -315,6 +394,9 @@ class ScoreTile extends StatelessWidget {
   }
 }
 
+//=========================================================================
+// This class is about LeaderboardRow thing.
+//=========================================================================
 class LeaderboardRow extends StatelessWidget {
   const LeaderboardRow({required this.entry, super.key});
 
@@ -380,6 +462,9 @@ class LeaderboardRow extends StatelessWidget {
   }
 }
 
+//=========================================================================
+// This class is about PodiumPlace thing.
+//=========================================================================
 class PodiumPlace extends StatelessWidget {
   const PodiumPlace({
     required this.rank,
@@ -420,6 +505,9 @@ class PodiumPlace extends StatelessWidget {
   }
 }
 
+//=========================================================================
+// This class is about InfoCard thing.
+//=========================================================================
 class InfoCard extends StatelessWidget {
   const InfoCard({
     required this.icon,

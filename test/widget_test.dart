@@ -1,7 +1,10 @@
-import 'package:flutter_test/flutter_test.dart';
+﻿import 'package:flutter_test/flutter_test.dart';
 
 import 'package:lythe/main.dart';
 
+//=========================================================================
+// Test is here for checking the app can render.
+//=========================================================================
 void main() {
   testWidgets('shows main menu and player setup', (tester) async {
     await tester.pumpWidget(const MyApp());

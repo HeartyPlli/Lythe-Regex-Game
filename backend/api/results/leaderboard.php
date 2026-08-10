@@ -5,12 +5,19 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../config/response.php';
 require_once __DIR__ . '/../../config/database.php';
 
+//=========================================================================
+// Api leaderboard is here for top score list.
+//=========================================================================
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     send_json(false, 'Method not allowed.', null, 405);
 }
 
 try {
     $pdo = Database::connect();
+
+    //=========================================================================
+    // This query get top 10 score and player avatar.
+    //=========================================================================
     $stmt = $pdo->query(
         'SELECT
             p.username,
@@ -26,6 +33,9 @@ try {
          LIMIT 10'
     );
 
+    //=========================================================================
+    // This loop add rank number to each score.
+    //=========================================================================
     $entries = [];
     $rank = 1;
     foreach ($stmt->fetchAll() as $row) {

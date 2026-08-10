@@ -1,5 +1,8 @@
-part of '../main.dart';
+﻿part of '../main.dart';
 
+//=========================================================================
+// Data model is here for game screen question and leaderboard.
+//=========================================================================
 enum Difficulty { easy, medium, hard, extreme }
 
 enum GameScreen {
@@ -13,6 +16,9 @@ enum GameScreen {
   result,
 }
 
+//=========================================================================
+// This enum is about EmoteState choices.
+//=========================================================================
 enum EmoteState {
   none,
   loading,
@@ -24,6 +30,9 @@ enum EmoteState {
   logout,
 }
 
+//=========================================================================
+// This class is about RegexQuestion thing.
+//=========================================================================
 class RegexQuestion {
   const RegexQuestion({
     required this.difficulty,
@@ -44,6 +53,9 @@ class RegexQuestion {
   final int points;
 }
 
+//=========================================================================
+// This class is about LeaderboardEntry thing.
+//=========================================================================
 class LeaderboardEntry {
   const LeaderboardEntry(
     this.rank,

@@ -5,10 +5,16 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../config/response.php';
 require_once __DIR__ . '/../../config/database.php';
 
+//=========================================================================
+// Api create player is here for save username and avatar.
+//=========================================================================
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     send_json(false, 'Method not allowed.', null, 405);
 }
 
+//=========================================================================
+// This block read and clean player input.
+//=========================================================================
 $body = read_json_body();
 $username = clean_string($body['username'] ?? '');
 $avatar = clean_string($body['avatar'] ?? 'character_01.png');
@@ -28,6 +34,9 @@ if (!preg_match('/^character_[0-9]{2}\.png$/', $avatar)) {
 try {
     $pdo = Database::connect();
 
+    //=========================================================================
+    // This query insert player or update avatar if same username.
+    //=========================================================================
     $stmt = $pdo->prepare(
         'INSERT INTO players (username, avatar)
          VALUES (:username, :avatar)
@@ -35,6 +44,9 @@ try {
     );
     $stmt->execute(['username' => $username, 'avatar' => $avatar]);
 
+    //=========================================================================
+    // This query get the player data after saving.
+    //=========================================================================
     $playerStmt = $pdo->prepare('SELECT id, username, avatar FROM players WHERE username = :username');
     $playerStmt->execute(['username' => $username]);
     $player = $playerStmt->fetch();

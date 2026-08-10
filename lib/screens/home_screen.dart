@@ -1,5 +1,8 @@
 part of '../main.dart';
 
+//=========================================================================
+// Ui home menu is here for start leaderboard and how to play.
+//=========================================================================
 class MainMenu extends StatelessWidget {
   const MainMenu({
     required this.onStart,
@@ -22,9 +25,10 @@ class MainMenu extends StatelessWidget {
         final compact = width < 560;
         final pageHeight = max(constraints.maxHeight, compact ? 980.0 : 1040.0);
         return SingleChildScrollView(
-          child: SizedBox(
-            height: pageHeight,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: pageHeight),
             child: Stack(
+              clipBehavior: Clip.none,
               children: [
                 Positioned.fill(
                   child: Image.asset(
@@ -67,10 +71,16 @@ class MainMenu extends StatelessWidget {
                 Align(
                   alignment: Alignment.topCenter,
                   child: Padding(
-                    padding: EdgeInsets.fromLTRB(24, compact ? 70 : 68, 24, 24),
+                    padding: EdgeInsets.fromLTRB(
+                      24,
+                      compact ? 70 : 68,
+                      24,
+                      compact ? 150 : 190,
+                    ),
                     child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 720),
+                      constraints: const BoxConstraints(maxWidth: 880),
                       child: Column(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           TweenAnimationBuilder<double>(
                             tween: Tween(begin: 0.95, end: 1),
@@ -106,11 +116,11 @@ class MainMenu extends StatelessWidget {
                             decoration: PanelDecoration.blossom,
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 22,
-                                vertical: 24,
+                                horizontal: 28,
+                                vertical: 28,
                               ),
                               child: Text(
-                                'Challenge your brain and master regular expressions!\n\nSolve fun pattern matching puzzles and become the ReGex Champion!',
+                                'About Lythe RegEx Game \n Lythe RegEx Game is an interactive web game designed to make learning \n and practicing Regular Expressions (RegEx) more engaging and enjoyable. \nPlayers are given a random RegEx pattern and must enter a string that matches it. \n Each correct answer earns 10 points, while 1 point is deducted for every second taken.\n  Players may also use a Hint when they need help, but each hint costs 5 points. The game combines speed, accuracy, \n and problem-solving—because with RegEx, even one tiny symbol can make all the difference! \nLearn the pattern. Match the string. Beat the clock.\n\nSolve fun pattern matching puzzles and become the ReGex Champion!',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   color: AppColors.brown,
@@ -126,21 +136,26 @@ class MainMenu extends StatelessWidget {
                             decoration: PanelDecoration.leaf,
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 20,
-                                vertical: 18,
+                                horizontal: 26,
+                                vertical: 22,
                               ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                              child: Wrap(
+                                alignment: WrapAlignment.center,
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                spacing: 14,
+                                runSpacing: 14,
                                 children: [
                                   Image.asset(
                                     'assets/decorations/flower_02.png',
                                     width: 54,
                                     fit: BoxFit.contain,
                                   ),
-                                  const SizedBox(width: 14),
-                                  Flexible(
+                                  ConstrainedBox(
+                                    constraints: const BoxConstraints(
+                                      maxWidth: 680,
+                                    ),
                                     child: Text(
-                                      'Created with â™¥ by Lythe',
+                                      'Created by Lythe \nA student-developed RegEx challenge game \n\n Development Team \n \t\t Heart Cagadas • Athea Jean Angcog • Lyzel Mae Talisic\n \t\t BSCS-3 | Bachelor of Science in Computer Science\n Designed, developed, and brought to life by the Lythe Team. \n Turning Regular Expressions into a game, one pattern at a time.',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         color: AppColors.brown,
@@ -149,7 +164,6 @@ class MainMenu extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(width: 14),
                                   Image.asset(
                                     'assets/decorations/leaf_02.png',
                                     width: 54,

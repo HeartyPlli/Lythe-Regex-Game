@@ -1,5 +1,8 @@
-part of '../main.dart';
+﻿part of '../main.dart';
 
+//=========================================================================
+// Ui buttons is here for reusable cute game buttons.
+//=========================================================================
 class CuteGameButton extends StatefulWidget {
   const CuteGameButton({
     required this.label,
@@ -20,6 +23,9 @@ class CuteGameButton extends StatefulWidget {
   State<CuteGameButton> createState() => _CuteGameButtonState();
 }
 
+//=========================================================================
+// This class is about _CuteGameButtonState thing.
+//=========================================================================
 class _CuteGameButtonState extends State<CuteGameButton> {
   bool _hovered = false;
   bool _pressed = false;
@@ -101,6 +107,9 @@ class _CuteGameButtonState extends State<CuteGameButton> {
   }
 }
 
+//=========================================================================
+// This class is about CuteIconButton thing.
+//=========================================================================
 class CuteIconButton extends StatelessWidget {
   const CuteIconButton({
     required this.icon,

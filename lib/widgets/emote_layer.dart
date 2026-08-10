@@ -1,5 +1,8 @@
-part of '../main.dart';
+﻿part of '../main.dart';
 
+//=========================================================================
+// Ui emote layer is here for showing character feedback.
+//=========================================================================
 class EmoteLayer extends StatelessWidget {
   const EmoteLayer({required this.state, super.key});
 

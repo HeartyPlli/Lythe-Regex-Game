@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -27,10 +27,16 @@ part 'widgets/confetti.dart';
 part 'utils/difficulty_label.dart';
 part 'theme/app_colors.dart';
 
+//=========================================================================
+// Ui app start and all file connection is here.
+//=========================================================================
 void main() {
   runApp(const MyApp());
 }
 
+//=========================================================================
+// This class is about MyApp thing.
+//=========================================================================
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 

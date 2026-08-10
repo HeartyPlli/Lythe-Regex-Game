@@ -1,3 +1,6 @@
+//=========================================================================
+// Service transport web is here for browser api request.
+//=========================================================================
 // ignore_for_file: avoid_web_libraries_in_flutter, deprecated_member_use
 
 import 'dart:convert';
@@ -5,6 +8,9 @@ import 'dart:html' as html;
 
 import 'http_transport.dart';
 
+//=========================================================================
+// This function send GET request in browser.
+//=========================================================================
 Future<HttpResponseData> httpGet(Uri uri) async {
   final request = await html.HttpRequest.request(
     uri.toString(),
@@ -17,6 +23,9 @@ Future<HttpResponseData> httpGet(Uri uri) async {
   );
 }
 
+//=========================================================================
+// This function send POST json request in browser.
+//=========================================================================
 Future<HttpResponseData> httpPostJson(
   Uri uri,
   Map<String, Object?> body,

@@ -1,5 +1,8 @@
-part of '../main.dart';
+﻿part of '../main.dart';
 
+//=========================================================================
+// Ui finish result is here for final score and big confetti.
+//=========================================================================
 class ResultScreen extends StatelessWidget {
   const ResultScreen({
     required this.score,

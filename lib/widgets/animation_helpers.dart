@@ -1,5 +1,8 @@
-part of '../main.dart';
+﻿part of '../main.dart';
 
+//=========================================================================
+// Ui animation helper is here for appear shake and float effects.
+//=========================================================================
 class PopupScrim extends StatelessWidget {
   const PopupScrim({required this.child, this.transparent = false, super.key});
 
@@ -24,6 +27,9 @@ class PopupScrim extends StatelessWidget {
   }
 }
 
+//=========================================================================
+// This class is about AnimatedAppear thing.
+//=========================================================================
 class AnimatedAppear extends StatefulWidget {
   const AnimatedAppear({required this.child, super.key});
 
@@ -33,6 +39,9 @@ class AnimatedAppear extends StatefulWidget {
   State<AnimatedAppear> createState() => _AnimatedAppearState();
 }
 
+//=========================================================================
+// This class is about _AnimatedAppearState thing.
+//=========================================================================
 class _AnimatedAppearState extends State<AnimatedAppear>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
@@ -66,6 +75,9 @@ class _AnimatedAppearState extends State<AnimatedAppear>
   }
 }
 
+//=========================================================================
+// This class is about FloatingSprite thing.
+//=========================================================================
 class FloatingSprite extends StatefulWidget {
   const FloatingSprite({required this.child, super.key});
 
@@ -75,6 +87,9 @@ class FloatingSprite extends StatefulWidget {
   State<FloatingSprite> createState() => _FloatingSpriteState();
 }
 
+//=========================================================================
+// This class is about _FloatingSpriteState thing.
+//=========================================================================
 class _FloatingSpriteState extends State<FloatingSprite>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
@@ -103,6 +118,9 @@ class _FloatingSpriteState extends State<FloatingSprite>
   }
 }
 
+//=========================================================================
+// This class is about SwayingSprite thing.
+//=========================================================================
 class SwayingSprite extends StatefulWidget {
   const SwayingSprite({required this.child, required this.delay, super.key});
 
@@ -113,6 +131,9 @@ class SwayingSprite extends StatefulWidget {
   State<SwayingSprite> createState() => _SwayingSpriteState();
 }
 
+//=========================================================================
+// This class is about _SwayingSpriteState thing.
+//=========================================================================
 class _SwayingSpriteState extends State<SwayingSprite>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
@@ -142,6 +163,9 @@ class _SwayingSpriteState extends State<SwayingSprite>
   }
 }
 
+//=========================================================================
+// This class is about BreathingSprite thing.
+//=========================================================================
 class BreathingSprite extends StatefulWidget {
   const BreathingSprite({required this.child, super.key});
 
@@ -151,6 +175,9 @@ class BreathingSprite extends StatefulWidget {
   State<BreathingSprite> createState() => _BreathingSpriteState();
 }
 
+//=========================================================================
+// This class is about _BreathingSpriteState thing.
+//=========================================================================
 class _BreathingSpriteState extends State<BreathingSprite>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
@@ -175,6 +202,9 @@ class _BreathingSpriteState extends State<BreathingSprite>
   }
 }
 
+//=========================================================================
+// This class is about Shake thing.
+//=========================================================================
 class Shake extends StatefulWidget {
   const Shake({required this.child, super.key});
 
@@ -184,6 +214,9 @@ class Shake extends StatefulWidget {
   State<Shake> createState() => _ShakeState();
 }
 
+//=========================================================================
+// This class is about _ShakeState thing.
+//=========================================================================
 class _ShakeState extends State<Shake> with SingleTickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
     vsync: this,

@@ -1,5 +1,8 @@
 part of '../main.dart';
 
+//=========================================================================
+// Game logic is here for question timer score and screen change.
+//=========================================================================
 class LytheGame extends StatefulWidget {
   const LytheGame({super.key});
 
@@ -7,6 +10,9 @@ class LytheGame extends StatefulWidget {
   State<LytheGame> createState() => _LytheGameState();
 }
 
+//=========================================================================
+// This class is about _LytheGameState thing.
+//=========================================================================
 class _LytheGameState extends State<LytheGame> {
   final Random _random = Random();
   final GameApiService _api = GameApiService();
@@ -28,9 +34,11 @@ class _LytheGameState extends State<LytheGame> {
   int _timedOutAnswers = 0;
   int _timeUsed = 0;
   bool _showCorrect = false;
+  bool _showWrong = false;
   bool _showFailure = false;
   bool _showLogout = false;
   bool _showExtremeIntro = false;
+  bool _hintUnlocked = false;
 
   RegexQuestion get _currentQuestion => _campaign[_currentIndex];
 
@@ -42,6 +50,10 @@ class _LytheGameState extends State<LytheGame> {
   void initState() {
     super.initState();
     _campaign = _buildLocalCampaign();
+
+    //=========================================================================
+    // This block show loading first then go menu.
+    //=========================================================================
     Future<void>.delayed(const Duration(milliseconds: 900), () {
       if (!mounted) {
         return;
@@ -57,6 +69,9 @@ class _LytheGameState extends State<LytheGame> {
     super.dispose();
   }
 
+  //=========================================================================
+  // This function make local question list if api no work.
+  //=========================================================================
   List<RegexQuestion> _buildLocalCampaign() {
     final questions = _localQuestionBank();
     return [
@@ -67,6 +82,9 @@ class _LytheGameState extends State<LytheGame> {
     ];
   }
 
+  //=========================================================================
+  // This function pick random questions by difficulty.
+  //=========================================================================
   List<RegexQuestion> _pickQuestions(
     List<RegexQuestion> questions,
     Difficulty difficulty,
@@ -77,6 +95,9 @@ class _LytheGameState extends State<LytheGame> {
     return pool.take(min(pool.length, count)).toList();
   }
 
+  //=========================================================================
+  // This function hold local regex questions.
+  //=========================================================================
   List<RegexQuestion> _localQuestionBank() {
     return const [
       RegexQuestion(
@@ -232,6 +253,9 @@ class _LytheGameState extends State<LytheGame> {
     ];
   }
 
+  //=========================================================================
+  // This function start new game and reset score.
+  //=========================================================================
   Future<void> _startCampaign() async {
     _timer?.cancel();
     var campaign = _buildLocalCampaign();
@@ -258,13 +282,18 @@ class _LytheGameState extends State<LytheGame> {
       _timeUsed = 0;
       _screen = GameScreen.play;
       _showCorrect = false;
+      _showWrong = false;
       _showFailure = false;
       _showExtremeIntro = false;
+      _hintUnlocked = false;
       _emote = EmoteState.none;
     });
     _prepareQuestion();
   }
 
+  //=========================================================================
+  // This function convert backend question to game question.
+  //=========================================================================
   RegexQuestion _fromApiQuestion(ApiQuestion question) {
     return RegexQuestion(
       id: question.id,
@@ -279,6 +308,9 @@ class _LytheGameState extends State<LytheGame> {
     );
   }
 
+  //=========================================================================
+  // This function change difficulty text to enum.
+  //=========================================================================
   Difficulty _difficultyFromString(String difficulty) {
     return switch (difficulty.toLowerCase()) {
       'medium' => Difficulty.medium,
@@ -288,6 +320,9 @@ class _LytheGameState extends State<LytheGame> {
     };
   }
 
+  //=========================================================================
+  // This function give sample answer by difficulty.
+  //=========================================================================
   String _exampleForDifficulty(Difficulty difficulty) {
     return switch (difficulty) {
       Difficulty.easy => 'hello',
@@ -297,12 +332,16 @@ class _LytheGameState extends State<LytheGame> {
     };
   }
 
+  //=========================================================================
+  // This function show loading before doing next action.
+  //=========================================================================
   Future<void> _showLoadingThen(FutureOr<void> Function() action) async {
     _timer?.cancel();
     setState(() {
       _screen = GameScreen.loading;
       _emote = EmoteState.none;
       _showCorrect = false;
+      _showWrong = false;
       _showFailure = false;
       _showLogout = false;
       _showExtremeIntro = false;
@@ -314,6 +353,9 @@ class _LytheGameState extends State<LytheGame> {
     await action();
   }
 
+  //=========================================================================
+  // This function save player name then start campaign.
+  //=========================================================================
   Future<void> _confirmPlayer(String username, String avatar) async {
     _username = username;
     _selectedAvatar = avatar;
@@ -334,10 +376,14 @@ class _LytheGameState extends State<LytheGame> {
     await _showLoadingThen(_startCampaign);
   }
 
+  //=========================================================================
+  // This function prepare answer box and timer for question.
+  //=========================================================================
   void _prepareQuestion() {
     _timer?.cancel();
     _answerController.clear();
     _secondsLeft = _isExtreme ? 20 : 15;
+    _hintUnlocked = false;
     if (_isExtreme) {
       setState(() {
         _emote = EmoteState.extremeHard;
@@ -358,10 +404,17 @@ class _LytheGameState extends State<LytheGame> {
     _startTimer();
   }
 
+  //=========================================================================
+  // This function run countdown timer.
+  //=========================================================================
   void _startTimer() {
     _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (!mounted || _showCorrect || _showFailure || _showLogout) {
+      if (!mounted ||
+          _showCorrect ||
+          _showWrong ||
+          _showFailure ||
+          _showLogout) {
         return;
       }
       if (_secondsLeft <= 1) {
@@ -376,9 +429,12 @@ class _LytheGameState extends State<LytheGame> {
     });
   }
 
+  //=========================================================================
+  // This function check answer with regex.
+  //=========================================================================
   void _handleSubmit() {
     final answer = _answerController.text.trim();
-    if (answer.isEmpty || _showCorrect || _showFailure) {
+    if (answer.isEmpty || _showCorrect || _showWrong || _showFailure) {
       return;
     }
 
@@ -394,16 +450,28 @@ class _LytheGameState extends State<LytheGame> {
     } else {
       setState(() {
         _wrongAnswers += 1;
-        _emote = EmoteState.incorrect;
-      });
-      Future<void>.delayed(const Duration(milliseconds: 900), () {
-        if (mounted && _emote == EmoteState.incorrect) {
-          _nextQuestion();
-        }
+        _showWrong = true;
+        _emote = EmoteState.none;
       });
     }
   }
 
+  //=========================================================================
+  // This function unlock hint and take 5 score.
+  //=========================================================================
+  void _unlockHint() {
+    if (_hintUnlocked || _score < 5) {
+      return;
+    }
+    setState(() {
+      _score -= 5;
+      _hintUnlocked = true;
+    });
+  }
+
+  //=========================================================================
+  // This function show timeout popup.
+  //=========================================================================
   void _handleTimeOut() {
     setState(() {
       _secondsLeft = 0;
@@ -414,22 +482,30 @@ class _LytheGameState extends State<LytheGame> {
     });
   }
 
+  //=========================================================================
+  // This function finish game and go leaderboard later.
+  //=========================================================================
   Future<void> _finishGame() async {
     _timer?.cancel();
     setState(() {
       _screen = GameScreen.result;
       _showCorrect = false;
+      _showWrong = false;
       _showFailure = false;
+      _hintUnlocked = false;
       _emote = EmoteState.none;
     });
     await _saveResult();
-    await Future<void>.delayed(const Duration(seconds: 3));
+    await Future<void>.delayed(const Duration(seconds: 4));
     if (!mounted) {
       return;
     }
     await _openLeaderboard();
   }
 
+  //=========================================================================
+  // This function send final score to backend.
+  //=========================================================================
   Future<void> _saveResult() async {
     if (_playerId == null) {
       try {
@@ -450,12 +526,16 @@ class _LytheGameState extends State<LytheGame> {
         wrongAnswers: _wrongAnswers,
         timedOutAnswers: _timedOutAnswers,
         timeUsed: _timeUsed,
+        totalQuestions: _totalQuestions,
       );
     } catch (_) {
       return;
     }
   }
 
+  //=========================================================================
+  // This function move to next question or finish game.
+  //=========================================================================
   void _nextQuestion() {
     _timer?.cancel();
     if (_currentIndex >= _totalQuestions - 1) {
@@ -465,12 +545,16 @@ class _LytheGameState extends State<LytheGame> {
     setState(() {
       _currentIndex += 1;
       _showCorrect = false;
+      _showWrong = false;
       _showFailure = false;
       _emote = EmoteState.none;
     });
     _prepareQuestion();
   }
 
+  //=========================================================================
+  // This function open logout popup.
+  //=========================================================================
   void _openLogoutDialog() {
     _timer?.cancel();
     setState(() {
@@ -479,6 +563,9 @@ class _LytheGameState extends State<LytheGame> {
     });
   }
 
+  //=========================================================================
+  // This function close logout popup or go menu.
+  //=========================================================================
   void _closeLogoutDialog({bool exitToMenu = false}) {
     setState(() {
       _showLogout = false;
@@ -486,6 +573,7 @@ class _LytheGameState extends State<LytheGame> {
       if (exitToMenu) {
         _screen = GameScreen.menu;
         _showCorrect = false;
+        _showWrong = false;
         _showFailure = false;
         _showExtremeIntro = false;
       }
@@ -493,12 +581,16 @@ class _LytheGameState extends State<LytheGame> {
     if (!exitToMenu &&
         _screen == GameScreen.play &&
         !_showCorrect &&
+        !_showWrong &&
         !_showFailure &&
         !_showExtremeIntro) {
       _startTimer();
     }
   }
 
+  //=========================================================================
+  // This function get leaderboard and open leaderboard screen.
+  //=========================================================================
   Future<void> _openLeaderboard() async {
     try {
       final entries = await _api.getLeaderboard();
@@ -545,6 +637,8 @@ class _LytheGameState extends State<LytheGame> {
           if (_emote != EmoteState.none) EmoteLayer(state: _emote),
           if (_showCorrect)
             _CorrectPopup(question: _currentQuestion, onNext: _nextQuestion),
+          if (_showWrong)
+            _WrongPopup(question: _currentQuestion, onNext: _nextQuestion),
           if (_showFailure)
             _FailurePopup(question: _currentQuestion, onSkip: _nextQuestion),
           if (_showExtremeIntro) const _ExtremeIntro(),
@@ -558,6 +652,9 @@ class _LytheGameState extends State<LytheGame> {
     );
   }
 
+  //=========================================================================
+  // This function choose which screen to show.
+  //=========================================================================
   Widget _buildScreen() {
     return switch (_screen) {
       GameScreen.loading => const LoadingScreen(),
@@ -588,8 +685,10 @@ class _LytheGameState extends State<LytheGame> {
         total: _totalQuestions,
         secondsLeft: _secondsLeft,
         score: _score,
+        hintUnlocked: _hintUnlocked,
         answerController: _answerController,
         onSubmit: _handleSubmit,
+        onUnlockHint: _unlockHint,
         onBack: _openLogoutDialog,
       ),
       GameScreen.leaderboard => LeaderboardScreen(

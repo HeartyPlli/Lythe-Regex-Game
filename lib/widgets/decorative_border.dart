@@ -1,5 +1,8 @@
-part of '../main.dart';
+﻿part of '../main.dart';
 
+//=========================================================================
+// Ui decorative border is here for flower leaf mushroom frame.
+//=========================================================================
 class DecorativeBorder extends StatelessWidget {
   const DecorativeBorder({super.key});
 

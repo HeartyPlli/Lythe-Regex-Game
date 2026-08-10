@@ -1,5 +1,8 @@
-part of '../main.dart';
+﻿part of '../main.dart';
 
+//=========================================================================
+// Ui loading screen is here for before game page show.
+//=========================================================================
 class LoadingScreen extends StatelessWidget {
   const LoadingScreen({super.key});
 

@@ -1,9 +1,15 @@
+--=========================================================================
+-- Database setup is here for Lythe game.
+--=========================================================================
 CREATE DATABASE IF NOT EXISTS game_database
   CHARACTER SET utf8mb4
   COLLATE utf8mb4_unicode_ci;
 
 USE game_database;
 
+--=========================================================================
+-- Players table is here for username and avatar.
+--=========================================================================
 CREATE TABLE IF NOT EXISTS players (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(50) NOT NULL,
@@ -13,6 +19,9 @@ CREATE TABLE IF NOT EXISTS players (
   KEY idx_players_created_at (created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--=========================================================================
+-- Levels table is here for difficulty and time.
+--=========================================================================
 CREATE TABLE IF NOT EXISTS levels (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   level_name VARCHAR(80) NOT NULL,
@@ -22,6 +31,9 @@ CREATE TABLE IF NOT EXISTS levels (
   KEY idx_levels_difficulty (difficulty)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--=========================================================================
+-- Questions table is here for regex questions and answers.
+--=========================================================================
 CREATE TABLE IF NOT EXISTS questions (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   level_id INT UNSIGNED NOT NULL,
@@ -36,6 +48,9 @@ CREATE TABLE IF NOT EXISTS questions (
   KEY idx_questions_level_id (level_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--=========================================================================
+-- Game results table is here for score history.
+--=========================================================================
 CREATE TABLE IF NOT EXISTS game_results (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   player_id INT UNSIGNED NOT NULL,
@@ -61,6 +76,9 @@ CREATE TABLE IF NOT EXISTS game_results (
   KEY idx_game_results_completed_at (completed_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--=========================================================================
+-- This block update old tables if column is missing.
+--=========================================================================
 ALTER TABLE players
   ADD COLUMN IF NOT EXISTS avatar VARCHAR(80) NOT NULL DEFAULT 'character_01.png' AFTER username;
 
@@ -68,6 +86,9 @@ ALTER TABLE game_results
   ADD COLUMN IF NOT EXISTS timed_out_answers SMALLINT UNSIGNED NOT NULL DEFAULT 0 AFTER wrong_answers,
   ADD COLUMN IF NOT EXISTS total_questions SMALLINT UNSIGNED NOT NULL DEFAULT 15 AFTER timed_out_answers;
 
+--=========================================================================
+-- This block add default levels.
+--=========================================================================
 INSERT INTO levels (id, level_name, difficulty, time_limit) VALUES
   (1, 'Easy', 'easy', 15),
   (2, 'Medium', 'medium', 15),
@@ -77,6 +98,9 @@ ON DUPLICATE KEY UPDATE
   level_name = VALUES(level_name),
   time_limit = VALUES(time_limit);
 
+--=========================================================================
+-- This block add default regex questions.
+--=========================================================================
 INSERT IGNORE INTO questions (level_id, question, answer, points) VALUES
   (1, 'One or more lowercase letters.', '^[a-z]+$', 10),
   (1, 'Only numbers are allowed.', '^[0-9]+$', 10),
@@ -103,5 +127,8 @@ INSERT IGNORE INTO questions (level_id, question, answer, points) VALUES
   (3, 'Lowercase word, dash, uppercase word.', '^[a-z]{2,}-[A-Z]{2,}$', 10),
   (4, '8+ letters/digits with at least one uppercase and one number.', '^(?=.{8,}$)(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]+$', 10);
 
+--=========================================================================
+-- This block add extra boss question.
+--=========================================================================
 INSERT IGNORE INTO questions (level_id, question, answer, points) VALUES
   (4, '9+ characters with lowercase, uppercase, and a number.', '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{9,}$', 10);

@@ -2,6 +2,9 @@ import 'dart:convert';
 
 import 'http_transport.dart';
 
+//=========================================================================
+// Service api is here for questions players results and leaderboard.
+//=========================================================================
 class GameApiException implements Exception {
   const GameApiException(this.message);
 
@@ -11,6 +14,9 @@ class GameApiException implements Exception {
   String toString() => message;
 }
 
+//=========================================================================
+// This class is about ApiPlayer thing.
+//=========================================================================
 class ApiPlayer {
   const ApiPlayer({
     required this.id,
@@ -23,6 +29,9 @@ class ApiPlayer {
   final String avatar;
 }
 
+//=========================================================================
+// This class is about ApiQuestion thing.
+//=========================================================================
 class ApiQuestion {
   const ApiQuestion({
     required this.id,
@@ -41,6 +50,9 @@ class ApiQuestion {
   final int points;
 }
 
+//=========================================================================
+// This class is about ApiLeaderboardEntry thing.
+//=========================================================================
 class ApiLeaderboardEntry {
   const ApiLeaderboardEntry({
     required this.rank,
@@ -63,12 +75,18 @@ class ApiLeaderboardEntry {
   final String completedAt;
 }
 
+//=========================================================================
+// This class is about GameApiService thing.
+//=========================================================================
 class GameApiService {
   GameApiService({String baseUrl = 'http://localhost/lythe/backend/api'})
     : _baseUri = Uri.parse(baseUrl.endsWith('/') ? baseUrl : '$baseUrl/');
 
   final Uri _baseUri;
 
+  //=========================================================================
+  // This function create player from app input.
+  //=========================================================================
   Future<ApiPlayer> createPlayer({
     required String username,
     required String avatar,
@@ -84,6 +102,9 @@ class GameApiService {
     );
   }
 
+  //=========================================================================
+  // This function get campaign questions from backend.
+  //=========================================================================
   Future<List<ApiQuestion>> getCampaignQuestions() async {
     final data = await _get('questions/campaign.php');
     final questions = data['questions'];
@@ -104,6 +125,9 @@ class GameApiService {
     ];
   }
 
+  //=========================================================================
+  // This function save player score after game.
+  //=========================================================================
   Future<void> saveResult({
     required int playerId,
     required int score,
@@ -111,6 +135,7 @@ class GameApiService {
     required int wrongAnswers,
     required int timedOutAnswers,
     required int timeUsed,
+    required int totalQuestions,
   }) async {
     await _post('results/save.php', {
       'player_id': playerId,
@@ -120,10 +145,13 @@ class GameApiService {
       'wrong_answers': wrongAnswers,
       'timed_out_answers': timedOutAnswers,
       'time_used': timeUsed,
-      'total_questions': 15,
+      'total_questions': totalQuestions,
     });
   }
 
+  //=========================================================================
+  // This function get leaderboard data from backend.
+  //=========================================================================
   Future<List<ApiLeaderboardEntry>> getLeaderboard() async {
     final data = await _get('results/leaderboard.php');
     final entries = data['entries'];
@@ -146,11 +174,17 @@ class GameApiService {
     ];
   }
 
+  //=========================================================================
+  // This function do GET request to api.
+  //=========================================================================
   Future<Map<String, Object?>> _get(String path) async {
     final response = await HttpTransport.get(_baseUri.resolve(path));
     return _decodeResponse(response);
   }
 
+  //=========================================================================
+  // This function do POST request to api.
+  //=========================================================================
   Future<Map<String, Object?>> _post(
     String path,
     Map<String, Object?> body,
@@ -159,6 +193,9 @@ class GameApiService {
     return _decodeResponse(response);
   }
 
+  //=========================================================================
+  // This function decode api answer and check success.
+  //=========================================================================
   Map<String, Object?> _decodeResponse(HttpResponseData response) {
     final decoded = jsonDecode(response.body);
     if (decoded is! Map<String, Object?>) {
@@ -177,6 +214,9 @@ class GameApiService {
     return {};
   }
 
+  //=========================================================================
+  // This function change api value to int safely.
+  //=========================================================================
   static int _asInt(Object? value, {int fallback = 0}) {
     if (value is int) {
       return value;

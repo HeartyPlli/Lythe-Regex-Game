@@ -1,5 +1,8 @@
-part of '../main.dart';
+﻿part of '../main.dart';
 
+//=========================================================================
+// Ui leaderboard is here for show players score list.
+//=========================================================================
 class LeaderboardScreen extends StatelessWidget {
   const LeaderboardScreen({
     required this.entries,

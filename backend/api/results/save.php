@@ -5,10 +5,16 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../config/response.php';
 require_once __DIR__ . '/../../config/database.php';
 
+//=========================================================================
+// Api save result is here for store score after game.
+//=========================================================================
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     send_json(false, 'Method not allowed.', null, 405);
 }
 
+//=========================================================================
+// This block read score data from app.
+//=========================================================================
 $body = read_json_body();
 $playerId = require_int($body, 'player_id');
 $levelId = require_int($body, 'level_id');
@@ -22,12 +28,18 @@ $timeUsed = require_int($body, 'time_used', 0);
 try {
     $pdo = Database::connect();
 
+    //=========================================================================
+    // This query check player exist before saving score.
+    //=========================================================================
     $playerStmt = $pdo->prepare('SELECT id FROM players WHERE id = :id');
     $playerStmt->execute(['id' => $playerId]);
     if (!$playerStmt->fetch()) {
         send_json(false, 'Player not found.', null, 404);
     }
 
+    //=========================================================================
+    // This query check level exist before saving score.
+    //=========================================================================
     $levelStmt = $pdo->prepare(
         'SELECT id, time_limit
          FROM levels
@@ -39,6 +51,9 @@ try {
         send_json(false, 'Level not found.', null, 404);
     }
 
+    //=========================================================================
+    // This block validate score count and time is not weird.
+    //=========================================================================
     $answeredCount = $correctAnswers + $wrongAnswers + $timedOutAnswers;
 
     if ($answeredCount !== $totalQuestions) {
@@ -55,6 +70,9 @@ try {
         send_json(false, 'Time used is higher than the allowed maximum for this level.', null, 422);
     }
 
+    //=========================================================================
+    // This query save final game result.
+    //=========================================================================
     $stmt = $pdo->prepare(
         'INSERT INTO game_results
             (player_id, level_id, score, correct_answers, wrong_answers, timed_out_answers, total_questions, time_used)

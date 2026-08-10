@@ -2,14 +2,23 @@
 
 declare(strict_types=1);
 
+//=========================================================================
+// Database connection is here for MySQL game data.
+//=========================================================================
 final class Database
 {
+    //=========================================================================
+    // Database login setting is here.
+    //=========================================================================
     private const HOST = '127.0.0.1';
     private const DB_NAME = 'game_database';
     private const USERNAME = 'root';
     private const PASSWORD = '';
     private const CHARSET = 'utf8mb4';
 
+    //=========================================================================
+    // This function connect PHP to database.
+    //=========================================================================
     public static function connect(): PDO
     {
         $dsn = sprintf(

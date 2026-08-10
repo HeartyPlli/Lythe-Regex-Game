@@ -1,5 +1,8 @@
 part of '../main.dart';
 
+//=========================================================================
+// Ui play screen is here for question answer score and timer.
+//=========================================================================
 class PlayScreen extends StatelessWidget {
   const PlayScreen({
     required this.question,
@@ -7,8 +10,10 @@ class PlayScreen extends StatelessWidget {
     required this.total,
     required this.secondsLeft,
     required this.score,
+    required this.hintUnlocked,
     required this.answerController,
     required this.onSubmit,
+    required this.onUnlockHint,
     required this.onBack,
     super.key,
   });
@@ -18,8 +23,10 @@ class PlayScreen extends StatelessWidget {
   final int total;
   final int secondsLeft;
   final int score;
+  final bool hintUnlocked;
   final TextEditingController answerController;
   final VoidCallback onSubmit;
+  final VoidCallback onUnlockHint;
   final VoidCallback onBack;
 
   @override
@@ -122,7 +129,12 @@ class PlayScreen extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 16),
-                          HintBox(text: question.hint),
+                          LockedHintBox(
+                            text: question.hint,
+                            unlocked: hintUnlocked,
+                            canUnlock: score >= 5,
+                            onUnlock: onUnlockHint,
+                          ),
                           const SizedBox(height: 18),
                           CuteGameButton(
                             label: 'SUBMIT',

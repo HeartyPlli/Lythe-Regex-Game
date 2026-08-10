@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+//=========================================================================
+// Response setup is here for json api and cors.
+//=========================================================================
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
@@ -12,6 +15,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
+//=========================================================================
+// This function send json result back to app.
+//=========================================================================
 function send_json(bool $success, string $message, mixed $data = null, int $statusCode = 200): never
 {
     http_response_code($statusCode);
@@ -29,6 +35,9 @@ function send_json(bool $success, string $message, mixed $data = null, int $stat
     exit;
 }
 
+//=========================================================================
+// This function read json body from request.
+//=========================================================================
 function read_json_body(): array
 {
     $rawBody = file_get_contents('php://input');
@@ -44,6 +53,9 @@ function read_json_body(): array
     return $decoded;
 }
 
+//=========================================================================
+// This function check number input is valid.
+//=========================================================================
 function require_int(array $source, string $key, int $min = 1): int
 {
     if (!isset($source[$key]) || filter_var($source[$key], FILTER_VALIDATE_INT) === false) {
@@ -58,6 +70,9 @@ function require_int(array $source, string $key, int $min = 1): int
     return $value;
 }
 
+//=========================================================================
+// This function clean text input from user.
+//=========================================================================
 function clean_string(mixed $value): string
 {
     return trim(strip_tags((string) $value));
