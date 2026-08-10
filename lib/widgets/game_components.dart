@@ -303,8 +303,8 @@ class LockedHintBox extends StatelessWidget {
     final shownText = unlocked
         ? text
         : canUnlock
-        ? 'Hint is locked. Tap to unlock for 5 score.'
-        : 'Hint is locked. Need 5 score to unlock.';
+        ? 'Hint is locked. Tap to unlock. This will take 5 points.'
+        : 'Hint is locked. You need at least 5 points to unlock it.';
     return GestureDetector(
       onTap: unlocked || !canUnlock ? null : onUnlock,
       child: Container(

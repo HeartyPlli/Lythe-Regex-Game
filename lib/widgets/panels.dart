@@ -10,24 +10,28 @@ class CutePanel extends StatelessWidget {
     required this.child,
     this.dark = false,
     this.decoration = PanelDecoration.blossom,
+    this.maxWidth = 760,
+    this.borderWidth = 5,
     super.key,
   });
 
   final Widget child;
   final bool dark;
   final PanelDecoration decoration;
+  final double maxWidth;
+  final double borderWidth;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      constraints: const BoxConstraints(maxWidth: 760),
+      constraints: BoxConstraints(maxWidth: maxWidth),
       decoration: BoxDecoration(
         color: dark ? AppColors.plum.withValues(alpha: 0.96) : AppColors.panel,
         borderRadius: BorderRadius.circular(26),
         border: Border.all(
           color: dark ? AppColors.brown : AppColors.peachStroke,
-          width: 4,
+          width: borderWidth,
         ),
         boxShadow: [
           BoxShadow(

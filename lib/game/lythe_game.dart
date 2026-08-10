@@ -487,6 +487,7 @@ class _LytheGameState extends State<LytheGame> {
   //=========================================================================
   Future<void> _finishGame() async {
     _timer?.cancel();
+    await _saveResult();
     setState(() {
       _screen = GameScreen.result;
       _showCorrect = false;
@@ -495,8 +496,7 @@ class _LytheGameState extends State<LytheGame> {
       _hintUnlocked = false;
       _emote = EmoteState.none;
     });
-    await _saveResult();
-    await Future<void>.delayed(const Duration(seconds: 4));
+    await Future<void>.delayed(const Duration(seconds: 2));
     if (!mounted) {
       return;
     }
@@ -547,6 +547,7 @@ class _LytheGameState extends State<LytheGame> {
       _showCorrect = false;
       _showWrong = false;
       _showFailure = false;
+      _hintUnlocked = false;
       _emote = EmoteState.none;
     });
     _prepareQuestion();

@@ -23,8 +23,12 @@ class MainMenu extends StatelessWidget {
       builder: (context, constraints) {
         final width = constraints.maxWidth;
         final compact = width < 560;
-        final pageHeight = max(constraints.maxHeight, compact ? 980.0 : 1040.0);
+        final pageHeight = max(
+          constraints.maxHeight,
+          compact ? 1160.0 : 1120.0,
+        );
         return SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: ConstrainedBox(
             constraints: BoxConstraints(minHeight: pageHeight),
             child: Stack(
@@ -78,7 +82,7 @@ class MainMenu extends StatelessWidget {
                       compact ? 150 : 190,
                     ),
                     child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 880),
+                      constraints: const BoxConstraints(maxWidth: 960),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -114,18 +118,20 @@ class MainMenu extends StatelessWidget {
                           const SizedBox(height: 16),
                           CutePanel(
                             decoration: PanelDecoration.blossom,
+                            maxWidth: 900,
+                            borderWidth: 6,
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 28,
-                                vertical: 28,
+                                horizontal: 34,
+                                vertical: 32,
                               ),
                               child: Text(
                                 'About Lythe RegEx Game \n Lythe RegEx Game is an interactive web game designed to make learning \n and practicing Regular Expressions (RegEx) more engaging and enjoyable. \nPlayers are given a random RegEx pattern and must enter a string that matches it. \n Each correct answer earns 10 points, while 1 point is deducted for every second taken.\n  Players may also use a Hint when they need help, but each hint costs 5 points. The game combines speed, accuracy, \n and problem-solving—because with RegEx, even one tiny symbol can make all the difference! \nLearn the pattern. Match the string. Beat the clock.\n\nSolve fun pattern matching puzzles and become the ReGex Champion!',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   color: AppColors.brown,
-                                  fontSize: compact ? 18 : 22,
-                                  height: 1.35,
+                                  fontSize: compact ? 17 : 21,
+                                  height: 1.42,
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
@@ -134,10 +140,12 @@ class MainMenu extends StatelessWidget {
                           const SizedBox(height: 16),
                           CutePanel(
                             decoration: PanelDecoration.leaf,
+                            maxWidth: 900,
+                            borderWidth: 6,
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 26,
-                                vertical: 22,
+                                horizontal: 32,
+                                vertical: 28,
                               ),
                               child: Wrap(
                                 alignment: WrapAlignment.center,
@@ -155,7 +163,7 @@ class MainMenu extends StatelessWidget {
                                       maxWidth: 680,
                                     ),
                                     child: Text(
-                                      'Created by Lythe \nA student-developed RegEx challenge game \n\n Development Team \n \t\t Heart Cagadas • Athea Jean Angcog • Lyzel Mae Talisic\n \t\t BSCS-3 | Bachelor of Science in Computer Science\n Designed, developed, and brought to life by the Lythe Team. \n Turning Regular Expressions into a game, one pattern at a time.',
+                                      'Created by Lythe \n Development Team \n \t\t Heart Cagadas • Athea Jean Angcog • Lyzel Mae Talisic\n \t\t BSCS-3 | Bachelor of Science in Computer Science\n Designed, developed, and brought to life by the Lythe Team. \n Turning Regular Expressions into a game, one pattern at a time.',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         color: AppColors.brown,
