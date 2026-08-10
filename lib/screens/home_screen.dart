@@ -115,7 +115,7 @@ class MainMenu extends StatelessWidget {
                             icon: Icons.emoji_events,
                             onPressed: onLeaderboard,
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: 46),
                           CutePanel(
                             decoration: PanelDecoration.blossom,
                             maxWidth: 900,
@@ -125,6 +125,7 @@ class MainMenu extends StatelessWidget {
                                 horizontal: 34,
                                 vertical: 32,
                               ),
+                              
                               child: Text(
                                 'About Lythe RegEx Game \n Lythe RegEx Game is an interactive web game designed to make learning \n and practicing Regular Expressions (RegEx) more engaging and enjoyable. \nPlayers are given a random RegEx pattern and must enter a string that matches it. \n Each correct answer earns 10 points, while 1 point is deducted for every second taken.\n  Players may also use a Hint when they need help, but each hint costs 5 points. The game combines speed, accuracy, \n and problem-solving—because with RegEx, even one tiny symbol can make all the difference! \nLearn the pattern. Match the string. Beat the clock.\n\nSolve fun pattern matching puzzles and become the ReGex Champion!',
                                 textAlign: TextAlign.center,
