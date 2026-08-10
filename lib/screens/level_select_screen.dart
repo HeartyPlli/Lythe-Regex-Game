@@ -17,6 +17,7 @@ class LevelSelect extends StatelessWidget {
             children: [
               HeaderRibbon(title: 'CHOOSE YOUR LEVEL', onBack: onBack),
               CutePanel(
+                decoration: PanelDecoration.mushroom,
                 child: Padding(
                   padding: const EdgeInsets.all(18),
                   child: Column(
@@ -24,19 +25,19 @@ class LevelSelect extends StatelessWidget {
                       DifficultyRow(
                         difficulty: Difficulty.easy,
                         title: 'EASY',
-                        subtitle: '10 QUESTIONS',
+                        subtitle: '6 QUESTIONS',
                         icon: 'assets/decorations/leaf_10.png',
                       ),
                       DifficultyRow(
                         difficulty: Difficulty.medium,
                         title: 'MEDIUM',
-                        subtitle: '8 QUESTIONS',
+                        subtitle: '5 QUESTIONS',
                         icon: 'assets/decorations/flower_14.png',
                       ),
                       DifficultyRow(
                         difficulty: Difficulty.hard,
                         title: 'HARD',
-                        subtitle: '5 QUESTIONS',
+                        subtitle: '3 QUESTIONS',
                         icon: 'assets/decorations/mushroom_03.png',
                       ),
                       DifficultyRow(

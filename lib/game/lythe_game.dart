@@ -9,52 +9,24 @@ class LytheGame extends StatefulWidget {
 
 class _LytheGameState extends State<LytheGame> {
   final Random _random = Random();
+  final GameApiService _api = GameApiService();
   final TextEditingController _answerController = TextEditingController();
-  final List<LeaderboardEntry> _baseLeaderboard = const [
-    LeaderboardEntry(
-      1,
-      'CookieBunny',
-      260,
-      'Extreme',
-      'assets/decorations/character_02.png',
-    ),
-    LeaderboardEntry(
-      2,
-      'MatchMaster',
-      230,
-      'Hard',
-      'assets/decorations/character_06.png',
-    ),
-    LeaderboardEntry(
-      3,
-      'RegexNinja',
-      210,
-      'Hard',
-      'assets/decorations/character_05.png',
-    ),
-    LeaderboardEntry(
-      4,
-      'CodeKitten',
-      180,
-      'Medium',
-      'assets/decorations/character_08.png',
-    ),
-    LeaderboardEntry(
-      5,
-      'PatternPanda',
-      150,
-      'Medium',
-      'assets/decorations/character_07.png',
-    ),
-  ];
 
   late List<RegexQuestion> _campaign;
+  List<LeaderboardEntry> _leaderboard = const [];
   GameScreen _screen = GameScreen.loading;
   EmoteState _emote = EmoteState.none;
   Timer? _timer;
+  int? _playerId;
+  String _username = '';
+  String _selectedAvatar = 'character_01.png';
   int _currentIndex = 0;
   int _secondsLeft = 15;
   int _score = 0;
+  int _correctAnswers = 0;
+  int _wrongAnswers = 0;
+  int _timedOutAnswers = 0;
+  int _timeUsed = 0;
   bool _showCorrect = false;
   bool _showFailure = false;
   bool _showLogout = false;
@@ -69,15 +41,12 @@ class _LytheGameState extends State<LytheGame> {
   @override
   void initState() {
     super.initState();
-    _campaign = _buildCampaign();
+    _campaign = _buildLocalCampaign();
     Future<void>.delayed(const Duration(milliseconds: 900), () {
       if (!mounted) {
         return;
       }
-      setState(() {
-        _screen = GameScreen.menu;
-        _emote = EmoteState.none;
-      });
+      setState(() => _screen = GameScreen.menu);
     });
   }
 
@@ -88,172 +57,205 @@ class _LytheGameState extends State<LytheGame> {
     super.dispose();
   }
 
-  List<RegexQuestion> _buildCampaign() {
-    final easy = [
-      const RegexQuestion(
+  List<RegexQuestion> _buildLocalCampaign() {
+    final questions = _localQuestionBank();
+    return [
+      ..._pickQuestions(questions, Difficulty.easy, 6),
+      ..._pickQuestions(questions, Difficulty.medium, 5),
+      ..._pickQuestions(questions, Difficulty.hard, 3),
+      ..._pickQuestions(questions, Difficulty.extreme, 1),
+    ];
+  }
+
+  List<RegexQuestion> _pickQuestions(
+    List<RegexQuestion> questions,
+    Difficulty difficulty,
+    int count,
+  ) {
+    final pool = questions.where((q) => q.difficulty == difficulty).toList()
+      ..shuffle(_random);
+    return pool.take(min(pool.length, count)).toList();
+  }
+
+  List<RegexQuestion> _localQuestionBank() {
+    return const [
+      RegexQuestion(
         difficulty: Difficulty.easy,
         pattern: r'^[a-z]+$',
         hint: 'One or more lowercase letters.',
         example: 'hello',
       ),
-      const RegexQuestion(
+      RegexQuestion(
         difficulty: Difficulty.easy,
         pattern: r'^[0-9]+$',
         hint: 'Only numbers are allowed.',
         example: '12345',
       ),
-      const RegexQuestion(
+      RegexQuestion(
         difficulty: Difficulty.easy,
         pattern: r'^cat$',
         hint: 'Match the exact word cat.',
         example: 'cat',
       ),
-      const RegexQuestion(
+      RegexQuestion(
         difficulty: Difficulty.easy,
         pattern: r'^[A-Z]+$',
         hint: 'Use uppercase letters only.',
         example: 'LYTHE',
       ),
-      const RegexQuestion(
+      RegexQuestion(
         difficulty: Difficulty.easy,
         pattern: r'^.{3}$',
         hint: 'Any three characters.',
         example: 'sun',
       ),
-      const RegexQuestion(
+      RegexQuestion(
         difficulty: Difficulty.easy,
         pattern: r'^[a-z]{4}$',
         hint: 'Exactly four lowercase letters.',
         example: 'leaf',
       ),
-      const RegexQuestion(
+      RegexQuestion(
         difficulty: Difficulty.easy,
         pattern: r'^hi+$',
         hint: 'h followed by one or more i letters.',
         example: 'hiii',
       ),
-      const RegexQuestion(
+      RegexQuestion(
         difficulty: Difficulty.easy,
         pattern: r'^[aeiou]$',
         hint: 'A single lowercase vowel.',
         example: 'a',
       ),
-      const RegexQuestion(
+      RegexQuestion(
         difficulty: Difficulty.easy,
         pattern: r'^(bug|bee)$',
         hint: 'Type bug or bee.',
         example: 'bee',
       ),
-      const RegexQuestion(
+      RegexQuestion(
         difficulty: Difficulty.easy,
         pattern: r'^[a-z][0-9]$',
         hint: 'One lowercase letter, then one digit.',
         example: 'b7',
       ),
-    ]..shuffle(_random);
-
-    final medium = [
-      const RegexQuestion(
+      RegexQuestion(
         difficulty: Difficulty.medium,
         pattern: r'^[a-z]{3,6}$',
         hint: 'Lowercase word with 3 to 6 letters.',
         example: 'flower',
       ),
-      const RegexQuestion(
+      RegexQuestion(
         difficulty: Difficulty.medium,
         pattern: r'^[A-Z][a-z]+$',
         hint: 'Capitalized word.',
         example: 'Lythe',
       ),
-      const RegexQuestion(
+      RegexQuestion(
         difficulty: Difficulty.medium,
         pattern: r'^\d{2}-\d{2}$',
         hint: 'Two digits, dash, two digits.',
         example: '08-10',
       ),
-      const RegexQuestion(
+      RegexQuestion(
         difficulty: Difficulty.medium,
         pattern: r'^mush(room)?$',
         hint: 'mush or mushroom.',
         example: 'mushroom',
       ),
-      const RegexQuestion(
+      RegexQuestion(
         difficulty: Difficulty.medium,
         pattern: r'^[a-z]+@[a-z]+$',
         hint: 'Lowercase word, @, lowercase word.',
         example: 'leaf@lythe',
       ),
-      const RegexQuestion(
+      RegexQuestion(
         difficulty: Difficulty.medium,
         pattern: r'^(ha){2,4}$',
         hint: 'Repeat ha from 2 to 4 times.',
         example: 'hahaha',
       ),
-      const RegexQuestion(
+      RegexQuestion(
         difficulty: Difficulty.medium,
         pattern: r'^[bcdfghjklmnpqrstvwxyz]+$',
         hint: 'Lowercase consonants only.',
         example: 'sprout',
       ),
-      const RegexQuestion(
+      RegexQuestion(
         difficulty: Difficulty.medium,
         pattern: r'^#[0-9A-F]{6}$',
         hint: 'Hex color with # and six uppercase hex digits.',
         example: '#FF99AA',
       ),
-    ]..shuffle(_random);
-
-    final hard = [
-      const RegexQuestion(
+      RegexQuestion(
         difficulty: Difficulty.hard,
         pattern: r'^(?=.*[0-9])[A-Za-z0-9]{5,}$',
         hint: 'At least 5 letters/digits and includes a number.',
         example: 'petal7',
       ),
-      const RegexQuestion(
+      RegexQuestion(
         difficulty: Difficulty.hard,
         pattern: r'^\w+\.(png|jpg)$',
         hint: 'Filename ending in .png or .jpg.',
         example: 'flower.png',
       ),
-      const RegexQuestion(
+      RegexQuestion(
         difficulty: Difficulty.hard,
         pattern: r'^(red|pink|green)-(leaf|flower)$',
         hint: 'Color, dash, plant word.',
         example: 'pink-flower',
       ),
-      const RegexQuestion(
+      RegexQuestion(
         difficulty: Difficulty.hard,
         pattern: r'^\d{4}/\d{2}/\d{2}$',
         hint: 'Date shaped like yyyy/mm/dd.',
         example: '2026/08/10',
       ),
-      const RegexQuestion(
+      RegexQuestion(
         difficulty: Difficulty.hard,
         pattern: r'^[a-z]{2,}-[A-Z]{2,}$',
         hint: 'Lowercase word, dash, uppercase word.',
         example: 'boss-REGEX',
       ),
-    ]..shuffle(_random);
-
-    final extreme = [
-      const RegexQuestion(
+      RegexQuestion(
         difficulty: Difficulty.extreme,
         pattern: r'^(?=.{8,}$)(?=.*[A-Z])(?=.*\d)[A-Za-z\d]+$',
         hint: '8+ letters/digits with at least one uppercase and one number.',
         example: 'Lythe2026',
       ),
+      RegexQuestion(
+        difficulty: Difficulty.extreme,
+        pattern: r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{9,}$',
+        hint: '9+ characters with lowercase, uppercase, and a number.',
+        example: 'RegexBoss7',
+      ),
     ];
-
-    return [...easy, ...medium, ...hard, ...extreme];
   }
 
-  void _startCampaign() {
+  Future<void> _startCampaign() async {
     _timer?.cancel();
+    var campaign = _buildLocalCampaign();
+    try {
+      final apiQuestions = await _api.getCampaignQuestions();
+      final converted = apiQuestions.map(_fromApiQuestion).toList();
+      if (converted.isNotEmpty) {
+        campaign = converted;
+      }
+    } catch (_) {
+      campaign = _buildLocalCampaign();
+    }
+
+    if (!mounted) {
+      return;
+    }
     setState(() {
-      _campaign = _buildCampaign();
+      _campaign = campaign;
       _currentIndex = 0;
       _score = 0;
+      _correctAnswers = 0;
+      _wrongAnswers = 0;
+      _timedOutAnswers = 0;
+      _timeUsed = 0;
       _screen = GameScreen.play;
       _showCorrect = false;
       _showFailure = false;
@@ -263,7 +265,39 @@ class _LytheGameState extends State<LytheGame> {
     _prepareQuestion();
   }
 
-  void _showLoadingThen(VoidCallback action) {
+  RegexQuestion _fromApiQuestion(ApiQuestion question) {
+    return RegexQuestion(
+      id: question.id,
+      levelId: question.levelId,
+      difficulty: _difficultyFromString(question.difficulty),
+      pattern: question.answer,
+      hint: question.question,
+      example: _exampleForDifficulty(
+        _difficultyFromString(question.difficulty),
+      ),
+      points: question.points,
+    );
+  }
+
+  Difficulty _difficultyFromString(String difficulty) {
+    return switch (difficulty.toLowerCase()) {
+      'medium' => Difficulty.medium,
+      'hard' => Difficulty.hard,
+      'extreme' => Difficulty.extreme,
+      _ => Difficulty.easy,
+    };
+  }
+
+  String _exampleForDifficulty(Difficulty difficulty) {
+    return switch (difficulty) {
+      Difficulty.easy => 'hello',
+      Difficulty.medium => 'flower',
+      Difficulty.hard => 'pink-flower',
+      Difficulty.extreme => 'Lythe2026',
+    };
+  }
+
+  Future<void> _showLoadingThen(FutureOr<void> Function() action) async {
     _timer?.cancel();
     setState(() {
       _screen = GameScreen.loading;
@@ -273,12 +307,31 @@ class _LytheGameState extends State<LytheGame> {
       _showLogout = false;
       _showExtremeIntro = false;
     });
-    Future<void>.delayed(const Duration(seconds: 2), () {
-      if (!mounted) {
-        return;
-      }
-      action();
-    });
+    await Future<void>.delayed(const Duration(seconds: 2));
+    if (!mounted) {
+      return;
+    }
+    await action();
+  }
+
+  Future<void> _confirmPlayer(String username, String avatar) async {
+    _username = username;
+    _selectedAvatar = avatar;
+    try {
+      final player = await _api.createPlayer(
+        username: username,
+        avatar: avatar,
+      );
+      _playerId = player.id;
+      _username = player.username;
+      _selectedAvatar = player.avatar;
+    } catch (_) {
+      _playerId = null;
+    }
+    if (!mounted) {
+      return;
+    }
+    await _showLoadingThen(_startCampaign);
   }
 
   void _prepareQuestion() {
@@ -315,7 +368,10 @@ class _LytheGameState extends State<LytheGame> {
         timer.cancel();
         _handleTimeOut();
       } else {
-        setState(() => _secondsLeft -= 1);
+        setState(() {
+          _secondsLeft -= 1;
+          _timeUsed += 1;
+        });
       }
     });
   }
@@ -327,18 +383,22 @@ class _LytheGameState extends State<LytheGame> {
     }
 
     final matcher = RegExp(_currentQuestion.pattern);
+    _timer?.cancel();
     if (matcher.hasMatch(answer)) {
-      _timer?.cancel();
       setState(() {
-        _score += 10 + _secondsLeft;
+        _correctAnswers += 1;
+        _score += _currentQuestion.points + _secondsLeft;
         _showCorrect = true;
         _emote = EmoteState.success;
       });
     } else {
-      setState(() => _emote = EmoteState.incorrect);
-      Future<void>.delayed(const Duration(milliseconds: 650), () {
+      setState(() {
+        _wrongAnswers += 1;
+        _emote = EmoteState.incorrect;
+      });
+      Future<void>.delayed(const Duration(milliseconds: 900), () {
         if (mounted && _emote == EmoteState.incorrect) {
-          setState(() => _emote = EmoteState.none);
+          _nextQuestion();
         }
       });
     }
@@ -347,33 +407,64 @@ class _LytheGameState extends State<LytheGame> {
   void _handleTimeOut() {
     setState(() {
       _secondsLeft = 0;
+      _timeUsed += 1;
+      _timedOutAnswers += 1;
       _showFailure = true;
       _emote = EmoteState.failed;
     });
   }
 
+  Future<void> _finishGame() async {
+    _timer?.cancel();
+    setState(() {
+      _screen = GameScreen.result;
+      _showCorrect = false;
+      _showFailure = false;
+      _emote = EmoteState.none;
+    });
+    await _saveResult();
+    await Future<void>.delayed(const Duration(seconds: 3));
+    if (!mounted) {
+      return;
+    }
+    await _openLeaderboard();
+  }
+
+  Future<void> _saveResult() async {
+    if (_playerId == null) {
+      try {
+        final player = await _api.createPlayer(
+          username: _username,
+          avatar: _selectedAvatar,
+        );
+        _playerId = player.id;
+      } catch (_) {
+        return;
+      }
+    }
+    try {
+      await _api.saveResult(
+        playerId: _playerId!,
+        score: _score,
+        correctAnswers: _correctAnswers,
+        wrongAnswers: _wrongAnswers,
+        timedOutAnswers: _timedOutAnswers,
+        timeUsed: _timeUsed,
+      );
+    } catch (_) {
+      return;
+    }
+  }
+
   void _nextQuestion() {
     _timer?.cancel();
     if (_currentIndex >= _totalQuestions - 1) {
-      setState(() {
-        _screen = GameScreen.result;
-        _showCorrect = false;
-        _showFailure = false;
-        _emote = EmoteState.success;
-      });
+      unawaited(_finishGame());
       return;
     }
     setState(() {
       _currentIndex += 1;
       _showCorrect = false;
-      _showFailure = false;
-      _emote = EmoteState.none;
-    });
-    _prepareQuestion();
-  }
-
-  void _retryQuestion() {
-    setState(() {
       _showFailure = false;
       _emote = EmoteState.none;
     });
@@ -408,13 +499,41 @@ class _LytheGameState extends State<LytheGame> {
     }
   }
 
+  Future<void> _openLeaderboard() async {
+    try {
+      final entries = await _api.getLeaderboard();
+      if (mounted) {
+        setState(() {
+          _leaderboard = [
+            for (final entry in entries)
+              LeaderboardEntry(
+                entry.rank,
+                entry.username,
+                entry.score,
+                'Complete',
+                'assets/decorations/${entry.avatar}',
+                correctAnswers: entry.correctAnswers,
+                wrongAnswers: entry.wrongAnswers,
+                timedOutAnswers: entry.timedOutAnswers,
+              ),
+          ];
+          _screen = GameScreen.leaderboard;
+          _emote = EmoteState.none;
+        });
+      }
+    } catch (_) {
+      if (mounted) {
+        setState(() => _screen = GameScreen.leaderboard);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          const AnimatedGameBackground(),
-          const DecorativeBorder(),
+          if (_screen != GameScreen.menu) const AnimatedGameBackground(),
           SafeArea(
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 450),
@@ -427,11 +546,7 @@ class _LytheGameState extends State<LytheGame> {
           if (_showCorrect)
             _CorrectPopup(question: _currentQuestion, onNext: _nextQuestion),
           if (_showFailure)
-            _FailurePopup(
-              question: _currentQuestion,
-              onRetry: _retryQuestion,
-              onSkip: _nextQuestion,
-            ),
+            _FailurePopup(question: _currentQuestion, onSkip: _nextQuestion),
           if (_showExtremeIntro) const _ExtremeIntro(),
           if (_showLogout)
             _LogoutDialog(
@@ -448,11 +563,18 @@ class _LytheGameState extends State<LytheGame> {
       GameScreen.loading => const LoadingScreen(),
       GameScreen.menu => MainMenu(
         key: const ValueKey('menu'),
-        onStart: () =>
-            _showLoadingThen(() => setState(() => _screen = GameScreen.levels)),
-        onLeaderboard: () => setState(() => _screen = GameScreen.leaderboard),
+        onStart: () => _showLoadingThen(
+          () => setState(() => _screen = GameScreen.playerSetup),
+        ),
+        onLeaderboard: () => unawaited(_openLeaderboard()),
         onHowToPlay: () => setState(() => _screen = GameScreen.howToPlay),
         onLogout: _openLogoutDialog,
+      ),
+      GameScreen.playerSetup => PlayerSetupScreen(
+        key: const ValueKey('player-setup'),
+        onBack: () => setState(() => _screen = GameScreen.menu),
+        onConfirm: (username, avatar) =>
+            unawaited(_confirmPlayer(username, avatar)),
       ),
       GameScreen.levels => LevelSelect(
         key: const ValueKey('levels'),
@@ -472,7 +594,7 @@ class _LytheGameState extends State<LytheGame> {
       ),
       GameScreen.leaderboard => LeaderboardScreen(
         key: const ValueKey('leaderboard'),
-        entries: _leaderboardEntries(),
+        entries: _leaderboard,
         onBack: () => setState(() => _screen = GameScreen.menu),
       ),
       GameScreen.howToPlay => HowToPlayScreen(
@@ -482,38 +604,9 @@ class _LytheGameState extends State<LytheGame> {
       GameScreen.result => ResultScreen(
         key: const ValueKey('result'),
         score: _score,
-        onLeaderboard: () => setState(() => _screen = GameScreen.leaderboard),
-        onPlayAgain: _startCampaign,
+        onLeaderboard: () => unawaited(_openLeaderboard()),
+        onPlayAgain: () => setState(() => _screen = GameScreen.playerSetup),
       ),
     };
-  }
-
-  List<LeaderboardEntry> _leaderboardEntries() {
-    final entries = [
-      ..._baseLeaderboard,
-      if (_score > 0)
-        LeaderboardEntry(
-          6,
-          'You',
-          _score,
-          _score >= 240
-              ? 'Extreme'
-              : _score >= 170
-              ? 'Hard'
-              : 'Medium',
-          'assets/decorations/character_01.png',
-        ),
-    ]..sort((a, b) => b.score.compareTo(a.score));
-
-    return [
-      for (var i = 0; i < min(entries.length, 6); i++)
-        LeaderboardEntry(
-          i + 1,
-          entries[i].player,
-          entries[i].score,
-          entries[i].level,
-          entries[i].asset,
-        ),
-    ];
   }
 }

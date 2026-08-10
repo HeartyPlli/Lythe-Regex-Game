@@ -44,6 +44,9 @@ class PlayScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   CutePanel(
+                    decoration: question.difficulty == Difficulty.extreme
+                        ? PanelDecoration.night
+                        : PanelDecoration.leaf,
                     child: Padding(
                       padding: EdgeInsets.all(compact ? 16 : 24),
                       child: Column(

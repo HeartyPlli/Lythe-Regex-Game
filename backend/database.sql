@@ -7,6 +7,7 @@ USE game_database;
 CREATE TABLE IF NOT EXISTS players (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(50) NOT NULL,
+  avatar VARCHAR(80) NOT NULL DEFAULT 'character_01.png',
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   UNIQUE KEY uq_players_username (username),
   KEY idx_players_created_at (created_at)
@@ -42,6 +43,8 @@ CREATE TABLE IF NOT EXISTS game_results (
   score INT UNSIGNED NOT NULL,
   correct_answers SMALLINT UNSIGNED NOT NULL,
   wrong_answers SMALLINT UNSIGNED NOT NULL,
+  timed_out_answers SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+  total_questions SMALLINT UNSIGNED NOT NULL DEFAULT 15,
   time_used SMALLINT UNSIGNED NOT NULL,
   completed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_game_results_player
@@ -57,6 +60,13 @@ CREATE TABLE IF NOT EXISTS game_results (
   KEY idx_game_results_score (score),
   KEY idx_game_results_completed_at (completed_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE players
+  ADD COLUMN IF NOT EXISTS avatar VARCHAR(80) NOT NULL DEFAULT 'character_01.png' AFTER username;
+
+ALTER TABLE game_results
+  ADD COLUMN IF NOT EXISTS timed_out_answers SMALLINT UNSIGNED NOT NULL DEFAULT 0 AFTER wrong_answers,
+  ADD COLUMN IF NOT EXISTS total_questions SMALLINT UNSIGNED NOT NULL DEFAULT 15 AFTER timed_out_answers;
 
 INSERT INTO levels (id, level_name, difficulty, time_limit) VALUES
   (1, 'Easy', 'easy', 15),
@@ -92,3 +102,6 @@ INSERT IGNORE INTO questions (level_id, question, answer, points) VALUES
   (3, 'Date shaped like yyyy/mm/dd.', '^\\d{4}/\\d{2}/\\d{2}$', 10),
   (3, 'Lowercase word, dash, uppercase word.', '^[a-z]{2,}-[A-Z]{2,}$', 10),
   (4, '8+ letters/digits with at least one uppercase and one number.', '^(?=.{8,}$)(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]+$', 10);
+
+INSERT IGNORE INTO questions (level_id, question, answer, points) VALUES
+  (4, '9+ characters with lowercase, uppercase, and a number.', '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{9,}$', 10);

@@ -15,6 +15,7 @@ class _CorrectPopup extends StatelessWidget {
           const ConfettiOverlay(),
           AnimatedAppear(
             child: CutePanel(
+              decoration: PanelDecoration.blossom,
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(22, 20, 22, 22),
                 child: Column(
@@ -63,14 +64,9 @@ class _CorrectPopup extends StatelessWidget {
 }
 
 class _FailurePopup extends StatelessWidget {
-  const _FailurePopup({
-    required this.question,
-    required this.onRetry,
-    required this.onSkip,
-  });
+  const _FailurePopup({required this.question, required this.onSkip});
 
   final RegexQuestion question;
-  final VoidCallback onRetry;
   final VoidCallback onSkip;
 
   @override
@@ -78,6 +74,7 @@ class _FailurePopup extends StatelessWidget {
     return PopupScrim(
       child: AnimatedAppear(
         child: CutePanel(
+          decoration: PanelDecoration.character,
           child: Padding(
             padding: const EdgeInsets.fromLTRB(22, 20, 22, 22),
             child: Column(
@@ -106,12 +103,7 @@ class _FailurePopup extends StatelessWidget {
                   alignment: WrapAlignment.center,
                   children: [
                     CuteGameButton(
-                      label: 'TRY AGAIN',
-                      icon: Icons.refresh,
-                      onPressed: onRetry,
-                    ),
-                    CuteGameButton(
-                      label: 'SKIP QUESTION',
+                      label: 'NEXT QUESTION',
                       icon: Icons.skip_next,
                       onPressed: onSkip,
                     ),
@@ -136,6 +128,7 @@ class _ExtremeIntro extends StatelessWidget {
       child: AnimatedAppear(
         child: CutePanel(
           dark: true,
+          decoration: PanelDecoration.night,
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
@@ -184,6 +177,7 @@ class _LogoutDialog extends StatelessWidget {
     return PopupScrim(
       child: AnimatedAppear(
         child: CutePanel(
+          decoration: PanelDecoration.meadow,
           child: Padding(
             padding: const EdgeInsets.all(22),
             child: Column(

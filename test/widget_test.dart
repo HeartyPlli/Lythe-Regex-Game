@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:lythe/main.dart';
 
 void main() {
-  testWidgets('shows main menu and level selection', (tester) async {
+  testWidgets('shows main menu and player setup', (tester) async {
     await tester.pumpWidget(const MyApp());
     await tester.pump(const Duration(seconds: 1));
 
@@ -17,8 +17,8 @@ void main() {
 
     await tester.pump(const Duration(seconds: 2));
 
-    expect(find.text('CHOOSE YOUR LEVEL'), findsOneWidget);
-    expect(find.text('EASY'), findsOneWidget);
-    expect(find.text('EXTREME'), findsOneWidget);
+    expect(find.text('PLAYER SETUP'), findsOneWidget);
+    expect(find.text('SELECT CHARACTER'), findsOneWidget);
+    expect(find.text('START GAME'), findsOneWidget);
   });
 }

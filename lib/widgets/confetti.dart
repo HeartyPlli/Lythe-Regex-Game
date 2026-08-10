@@ -1,7 +1,9 @@
 part of '../main.dart';
 
 class ConfettiOverlay extends StatefulWidget {
-  const ConfettiOverlay({super.key});
+  const ConfettiOverlay({this.huge = false, super.key});
+
+  final bool huge;
 
   @override
   State<ConfettiOverlay> createState() => _ConfettiOverlayState();
@@ -11,10 +13,12 @@ class _ConfettiOverlayState extends State<ConfettiOverlay>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
     vsync: this,
-    duration: const Duration(seconds: 3),
+    duration: widget.huge
+        ? const Duration(seconds: 4)
+        : const Duration(seconds: 3),
   )..repeat();
   late final List<_ConfettiPiece> _pieces = List.generate(
-    80,
+    widget.huge ? 180 : 80,
     (index) => _ConfettiPiece(Random(index + 7)),
   );
 

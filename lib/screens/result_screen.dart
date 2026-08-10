@@ -16,13 +16,14 @@ class ResultScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        const ConfettiOverlay(),
+        const ConfettiOverlay(huge: true),
         Center(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(18),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 620),
               child: CutePanel(
+                decoration: PanelDecoration.blossom,
                 child: Padding(
                   padding: const EdgeInsets.all(24),
                   child: Column(

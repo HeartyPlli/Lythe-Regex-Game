@@ -14,7 +14,7 @@ $playerId = require_int($_GET, 'id');
 try {
     $pdo = Database::connect();
     $stmt = $pdo->prepare(
-        'SELECT id, username, created_at
+        'SELECT id, username, avatar, created_at
          FROM players
          WHERE id = :id'
     );

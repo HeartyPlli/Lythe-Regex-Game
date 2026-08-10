@@ -14,7 +14,7 @@ $playerId = require_int($_GET, 'player_id');
 try {
     $pdo = Database::connect();
 
-    $playerStmt = $pdo->prepare('SELECT id, username FROM players WHERE id = :id');
+    $playerStmt = $pdo->prepare('SELECT id, username, avatar FROM players WHERE id = :id');
     $playerStmt->execute(['id' => $playerId]);
     $player = $playerStmt->fetch();
     if (!$player) {
@@ -31,6 +31,8 @@ try {
             gr.score,
             gr.correct_answers,
             gr.wrong_answers,
+            gr.timed_out_answers,
+            gr.total_questions,
             gr.time_used,
             gr.completed_at
          FROM game_results gr

@@ -16,6 +16,7 @@ class HowToPlayScreen extends StatelessWidget {
             children: [
               HeaderRibbon(title: 'GAME INFO', onBack: onBack),
               CutePanel(
+                decoration: PanelDecoration.meadow,
                 child: Padding(
                   padding: const EdgeInsets.all(18),
                   child: Wrap(
@@ -25,8 +26,8 @@ class HowToPlayScreen extends StatelessWidget {
                     children: const [
                       InfoCard(
                         icon: Icons.shuffle,
-                        title: 'RANDOMIZED',
-                        subtitle: 'Every campaign shuffles questions.',
+                        title: '15 QUESTIONS',
+                        subtitle: '6 Easy, 5 Medium, 3 Hard, 1 Extreme.',
                       ),
                       InfoCard(
                         icon: Icons.timer,

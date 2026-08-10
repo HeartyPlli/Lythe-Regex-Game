@@ -84,7 +84,13 @@ class GameTopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final progress = (index + 1) / total;
+    final lowTime = secondsLeft <= 5;
     return CutePanel(
+      decoration: lowTime
+          ? PanelDecoration.mushroom
+          : difficulty == Difficulty.extreme
+          ? PanelDecoration.night
+          : PanelDecoration.leaf,
       child: Padding(
         padding: const EdgeInsets.all(14),
         child: Column(

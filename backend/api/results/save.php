@@ -15,6 +15,8 @@ $levelId = require_int($body, 'level_id');
 $score = require_int($body, 'score', 0);
 $correctAnswers = require_int($body, 'correct_answers', 0);
 $wrongAnswers = require_int($body, 'wrong_answers', 0);
+$timedOutAnswers = require_int($body, 'timed_out_answers', 0);
+$totalQuestions = require_int($body, 'total_questions', 1);
 $timeUsed = require_int($body, 'time_used', 0);
 
 try {
@@ -37,30 +39,27 @@ try {
         send_json(false, 'Level not found.', null, 404);
     }
 
-    $questionCountStmt = $pdo->prepare('SELECT COUNT(*) FROM questions WHERE level_id = :level_id');
-    $questionCountStmt->execute(['level_id' => $levelId]);
-    $questionCount = (int) $questionCountStmt->fetchColumn();
-    $answeredCount = $correctAnswers + $wrongAnswers;
+    $answeredCount = $correctAnswers + $wrongAnswers + $timedOutAnswers;
 
-    if ($answeredCount > $questionCount) {
-        send_json(false, 'Answered count is greater than the number of questions for this level.', null, 422);
+    if ($answeredCount !== $totalQuestions) {
+        send_json(false, 'Answered count must match total questions.', null, 422);
     }
 
-    $maxPossibleScore = ($correctAnswers * 10) + ($correctAnswers * (int) $level['time_limit']);
+    $maxPossibleScore = ($correctAnswers * 10) + ($correctAnswers * 20);
     if ($score > $maxPossibleScore) {
         send_json(false, 'Score is higher than the allowed maximum for this result.', null, 422);
     }
 
-    $maxPossibleTime = max(1, $questionCount) * (int) $level['time_limit'];
+    $maxPossibleTime = max(1, $totalQuestions) * 20;
     if ($timeUsed > $maxPossibleTime) {
         send_json(false, 'Time used is higher than the allowed maximum for this level.', null, 422);
     }
 
     $stmt = $pdo->prepare(
         'INSERT INTO game_results
-            (player_id, level_id, score, correct_answers, wrong_answers, time_used)
+            (player_id, level_id, score, correct_answers, wrong_answers, timed_out_answers, total_questions, time_used)
          VALUES
-            (:player_id, :level_id, :score, :correct_answers, :wrong_answers, :time_used)'
+            (:player_id, :level_id, :score, :correct_answers, :wrong_answers, :timed_out_answers, :total_questions, :time_used)'
     );
     $stmt->execute([
         'player_id' => $playerId,
@@ -68,6 +67,8 @@ try {
         'score' => $score,
         'correct_answers' => $correctAnswers,
         'wrong_answers' => $wrongAnswers,
+        'timed_out_answers' => $timedOutAnswers,
+        'total_questions' => $totalQuestions,
         'time_used' => $timeUsed,
     ]);
 
@@ -78,6 +79,8 @@ try {
         'score' => $score,
         'correct_answers' => $correctAnswers,
         'wrong_answers' => $wrongAnswers,
+        'timed_out_answers' => $timedOutAnswers,
+        'total_questions' => $totalQuestions,
         'time_used' => $timeUsed,
     ], 201);
 } catch (PDOException) {

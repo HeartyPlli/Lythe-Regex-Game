@@ -1,10 +1,18 @@
 part of '../main.dart';
 
+enum PanelDecoration { blossom, leaf, mushroom, character, meadow, night }
+
 class CutePanel extends StatelessWidget {
-  const CutePanel({required this.child, this.dark = false, super.key});
+  const CutePanel({
+    required this.child,
+    this.dark = false,
+    this.decoration = PanelDecoration.blossom,
+    super.key,
+  });
 
   final Widget child;
   final bool dark;
+  final PanelDecoration decoration;
 
   @override
   Widget build(BuildContext context) {
@@ -26,20 +34,126 @@ class CutePanel extends StatelessWidget {
           ),
         ],
       ),
-      child: Stack(
-        children: [
-          Positioned(
-            top: 8,
-            left: 12,
-            child: Image.asset('assets/decorations/flower_06.png', width: 34),
-          ),
-          Positioned(
-            bottom: 8,
-            right: 12,
-            child: Image.asset('assets/decorations/leaf_01.png', width: 38),
-          ),
-          child,
-        ],
+      child: Stack(children: [..._insideBorderDecorations(), child]),
+    );
+  }
+
+  List<Widget> _insideBorderDecorations() {
+    return switch (decoration) {
+      PanelDecoration.blossom => [
+        _PanelDecorationImage(
+          top: 8,
+          left: 12,
+          asset: 'assets/decorations/flower_06.png',
+          width: 34,
+        ),
+        _PanelDecorationImage(
+          bottom: 8,
+          right: 12,
+          asset: 'assets/decorations/leaf_01.png',
+          width: 38,
+        ),
+      ],
+      PanelDecoration.leaf => [
+        _PanelDecorationImage(
+          top: 8,
+          right: 12,
+          asset: 'assets/decorations/leaf_02.png',
+          width: 42,
+        ),
+        _PanelDecorationImage(
+          bottom: 8,
+          left: 12,
+          asset: 'assets/decorations/flower_14.png',
+          width: 34,
+        ),
+      ],
+      PanelDecoration.mushroom => [
+        _PanelDecorationImage(
+          bottom: 8,
+          left: 12,
+          asset: 'assets/decorations/mushroom_06.png',
+          width: 46,
+        ),
+        _PanelDecorationImage(
+          top: 8,
+          right: 12,
+          asset: 'assets/decorations/flower_16.png',
+          width: 42,
+        ),
+      ],
+      PanelDecoration.character => [
+        _PanelDecorationImage(
+          bottom: 6,
+          left: 10,
+          asset: 'assets/decorations/character_02.png',
+          width: 46,
+        ),
+        _PanelDecorationImage(
+          top: 8,
+          right: 12,
+          asset: 'assets/decorations/leaf_10.png',
+          width: 38,
+        ),
+      ],
+      PanelDecoration.meadow => [
+        _PanelDecorationImage(
+          top: 8,
+          left: 12,
+          asset: 'assets/decorations/flower_34.png',
+          width: 54,
+        ),
+        _PanelDecorationImage(
+          bottom: 8,
+          right: 12,
+          asset: 'assets/decorations/mushroom_15.png',
+          width: 52,
+        ),
+      ],
+      PanelDecoration.night => [
+        _PanelDecorationImage(
+          top: 8,
+          right: 12,
+          asset: 'assets/decorations/character_05.png',
+          width: 46,
+        ),
+        _PanelDecorationImage(
+          bottom: 8,
+          left: 12,
+          asset: 'assets/decorations/mushroom_14.png',
+          width: 48,
+        ),
+      ],
+    };
+  }
+}
+
+class _PanelDecorationImage extends StatelessWidget {
+  const _PanelDecorationImage({
+    required this.asset,
+    required this.width,
+    this.top,
+    this.right,
+    this.bottom,
+    this.left,
+  });
+
+  final String asset;
+  final double width;
+  final double? top;
+  final double? right;
+  final double? bottom;
+  final double? left;
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      top: top,
+      right: right,
+      bottom: bottom,
+      left: left,
+      child: IgnorePointer(
+        child: Image.asset(asset, width: width, fit: BoxFit.contain),
       ),
     );
   }
