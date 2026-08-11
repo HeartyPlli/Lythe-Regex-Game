@@ -1,4 +1,4 @@
-﻿part of '../main.dart';
+part of '../main.dart';
 
 //=========================================================================
 // Ui popups is here for correct wrong timeout logout and boss message.
@@ -12,55 +12,49 @@ class _CorrectPopup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupScrim(
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          const ConfettiOverlay(),
-          AnimatedAppear(
-            child: CutePanel(
-              decoration: PanelDecoration.blossom,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(22, 20, 22, 22),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Image.asset(
-                      'assets/image/Yay.png',
-                      height: 140,
-                      fit: BoxFit.contain,
-                    ),
-                    Text(
-                      'CORRECT!',
-                      style: TextStyle(
-                        color: AppColors.green,
-                        fontSize: 38,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 0,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      'Congratulations! That is a match!',
-                      style: TextStyle(
-                        color: AppColors.brown,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: 14),
-                    HintBox(text: 'You earned +10 points and a time bonus.'),
-                    const SizedBox(height: 16),
-                    CuteGameButton(
-                      label: 'NEXT QUESTION',
-                      icon: Icons.arrow_forward_rounded,
-                      onPressed: onNext,
-                      green: true,
-                    ),
-                  ],
+      child: AnimatedAppear(
+        child: CutePanel(
+          decoration: PanelDecoration.blossom,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(22, 20, 22, 22),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.asset(
+                  'assets/image/Yay.png',
+                  height: 140,
+                  fit: BoxFit.contain,
                 ),
-              ),
+                Text(
+                  'CORRECT!',
+                  style: TextStyle(
+                    color: AppColors.green,
+                    fontSize: 38,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 0,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'Congratulations! That is a match!',
+                  style: TextStyle(
+                    color: AppColors.brown,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 14),
+                HintBox(text: 'You earned +10 points and a time bonus.'),
+                const SizedBox(height: 16),
+                CuteGameButton(
+                  label: 'NEXT QUESTION',
+                  icon: Icons.arrow_forward_rounded,
+                  onPressed: onNext,
+                  green: true,
+                ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }

@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -23,7 +23,6 @@ part 'widgets/buttons.dart';
 part 'widgets/panels.dart';
 part 'widgets/game_components.dart';
 part 'widgets/animation_helpers.dart';
-part 'widgets/confetti.dart';
 part 'utils/difficulty_label.dart';
 part 'theme/app_colors.dart';
 

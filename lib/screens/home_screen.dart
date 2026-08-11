@@ -123,22 +123,73 @@ class MainMenu extends StatelessWidget {
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 34,
-                                vertical: 32,
+                                vertical: 28,
                               ),
-                              
-                              child: Text(
-                                'About Lythe RegEx Game \n Lythe RegEx Game is an interactive web game designed to make learning \n and practicing Regular Expressions (RegEx) more engaging and enjoyable. \nPlayers are given a random RegEx pattern and must enter a string that matches it. \n Each correct answer earns 10 points, while 1 point is deducted for every second taken.\n  Players may also use a Hint when they need help, but each hint costs 5 points. The game combines speed, accuracy, \n and problem-solving—because with RegEx, even one tiny symbol can make all the difference! \nLearn the pattern. Match the string. Beat the clock.\n\nSolve fun pattern matching puzzles and become the ReGex Champion!',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: AppColors.brown,
-                                  fontSize: compact ? 17 : 21,
-                                  height: 1.42,
-                                  fontWeight: FontWeight.w700,
-                                ),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    'About',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: AppColors.brown,
+                                      fontSize: compact ? 21 : 26,
+                                      fontWeight: FontWeight.w900,
+                                      height: 1.2,
+                                    ),
+                                  ),
+
+                                  const SizedBox(height: 14),
+
+                                  Text(
+                                    'Lythe RegEx Game is an interactive game designed '
+                                    'to make learning and practicing Regular Expressions '
+                                    '(RegEx) more fun, engaging, and enjoyable.\n\n'
+                                    'In each round, players are given a random RegEx '
+                                    'pattern and must enter a string that matches it.\n\n'
+                                    'Each correct answer earns 10 points, while 1 point '
+                                    'is deducted for every second taken. Players may also '
+                                    'use a Hint when they need help, but each hint costs '
+                                    '5 points.\n\n'
+                                    'The game combines speed, accuracy, and problem-solving '
+                                    'skills, because with RegEx, even one tiny symbol can '
+                                    'make all the difference!',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: AppColors.brown,
+                                      fontSize: compact ? 14 : 17,
+                                      fontWeight: FontWeight.w500,
+                                      height: 1.5,
+                                    ),
+                                  ),
+
+                                  const SizedBox(height: 16),
+
+                                  Text(
+                                    'Learn the pattern. Match the string. Beat the clock.',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: AppColors.brown,
+                                      fontSize: compact ? 15 : 19,
+                                      fontWeight: FontWeight.w800,
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                                  ),
+
+                                  const SizedBox(height: 6),
+
+                                  Text(
+                                    '✦ Become the RegEx Champion! ✦',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: AppColors.brown,
+                                      fontSize: compact ? 16 : 20,
+                                      fontWeight: FontWeight.w900,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
-                          const SizedBox(height: 16),
                           CutePanel(
                             decoration: PanelDecoration.leaf,
                             maxWidth: 900,
@@ -148,35 +199,80 @@ class MainMenu extends StatelessWidget {
                                 horizontal: 32,
                                 vertical: 28,
                               ),
-                              child: Wrap(
-                                alignment: WrapAlignment.center,
-                                crossAxisAlignment: WrapCrossAlignment.center,
-                                spacing: 14,
-                                runSpacing: 14,
+                              child: Stack(
+                                alignment: Alignment.center,
                                 children: [
-                                  Image.asset(
-                                    'assets/decorations/flower_02.png',
-                                    width: 54,
-                                    fit: BoxFit.contain,
+                                  // LEFT FLOWER
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    
                                   ),
+
+                                  // CENTERED CREDITS
                                   ConstrainedBox(
                                     constraints: const BoxConstraints(
                                       maxWidth: 680,
                                     ),
-                                    child: Text(
-                                      'Created by Lythe \n Development Team \n \t\t Heart Cagadas • Athea Jean Angcog • Lyzel Mae Talisic\n \t\t BSCS-3 | Bachelor of Science in Computer Science\n Designed, developed, and brought to life by the Lythe Team. \n Turning Regular Expressions into a game, one pattern at a time.',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: AppColors.brown,
-                                        fontSize: compact ? 18 : 24,
-                                        fontWeight: FontWeight.w900,
-                                      ),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          'Credits',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: AppColors.brown,
+                                            fontSize: compact ? 21 : 26,
+                                            fontWeight: FontWeight.w900,
+                                          ),
+                                        ),
+
+                                        const SizedBox(height: 8),
+
+                                        Text(
+                                          'Heart Cagadas • Athea Jean Angcog • Lyzel Mae Talisic',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: AppColors.brown,
+                                            fontSize: compact ? 15 : 19,
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                        ),
+
+                                        const SizedBox(height: 4),
+
+                                        Text(
+                                          'BSCS-3 | Bachelor of Science in Computer Science',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: AppColors.brown.withValues(alpha: 0.75),
+                                            fontSize: compact ? 12 : 15,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+
+                                        const SizedBox(height: 12),
+
+                                        Text(
+                                          'Designed, developed, and brought to life by the '
+                                          'Lythe Team.\n'
+                                          'Turning Regular Expressions into a game, '
+                                          'one pattern at a time. ♡',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: AppColors.brown,
+                                            fontSize: compact ? 12 : 15,
+                                            fontWeight: FontWeight.w500,
+                                            fontStyle: FontStyle.italic,
+                                            height: 1.4,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  Image.asset(
-                                    'assets/decorations/leaf_02.png',
-                                    width: 54,
-                                    fit: BoxFit.contain,
+
+                                  // RIGHT LEAF
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    
                                   ),
                                 ],
                               ),
